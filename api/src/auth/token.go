@@ -14,9 +14,8 @@ type AuthToken struct {
 	UserID    string
 }
 
-var secret = os.Getenv("JWT_SECRET")
-
 func GenerateToken(userID string) (string, error) {
+	secret := os.Getenv("JWT_SECRET")
 	now := time.Now()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userID,
@@ -27,21 +26,22 @@ func GenerateToken(userID string) (string, error) {
 }
 
 func DecodeToken(tokenString string) (AuthToken, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
+	secret := os.Getenv("JWT_SECRET")
 
-		return secret, nil
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(secret), nil
 	})
 
-	claims, ok := token.Claims.(jwt.MapClaims)
-
-	if ok {
-		return createAuthTokenFromClaims(claims)
-	} else {
+	if err != nil {
 		return AuthToken{}, err
 	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return AuthToken{}, fmt.Errorf("something is wrong")
+	}
+
+	return createAuthTokenFromClaims(claims)
 }
 
 func (authToken AuthToken) IsValid() bool {
