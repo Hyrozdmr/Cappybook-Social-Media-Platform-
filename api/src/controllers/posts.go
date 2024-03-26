@@ -13,7 +13,7 @@ type JSONPost struct {
 	Message string `json:"message"`
 }
 
-func GetAllPosts(ctx *gin.Context) {
+func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incoming HTTP request
 	// FetchAllPosts() returns all posts from the database in a slice
 	posts, err := models.FetchAllPosts()
 
@@ -66,7 +66,7 @@ func CreatePost(ctx *gin.Context) {
 		Message: requestBody.Message,
 	}
 
-	_, err = newPost.Save()
+	_, err = newPost.Save() // Adds newPost to database
 	if err != nil {
 		SendInternalError(ctx, err)
 		return

@@ -5,11 +5,12 @@ import (
 )
 
 type User struct {
-	gorm.Model
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	gorm.Model        // gorm.Model creates the following common fields automatically; ID (unit / gorm:"primaryKey"), CreatedAt (time.Time), UpdatedAt(time.Time), DeletedAt (gorm.DeletedAt / gorm:"index")
+	Email      string `json:"email"`
+	Password   string `json:"password"`
 }
 
+// This function creates a new record in the database
 func (user *User) Save() (*User, error) {
 	err := Database.Create(user).Error
 	if err != nil {
@@ -19,6 +20,7 @@ func (user *User) Save() (*User, error) {
 	return user, nil
 }
 
+// FindUser(id) finds and returns the first record in the database where the id matches the id given
 func FindUser(id string) (*User, error) {
 	var user User
 	err := Database.Where("id = ?", id).First(&user).Error
@@ -30,6 +32,7 @@ func FindUser(id string) (*User, error) {
 	return &user, nil
 }
 
+// FindUserByEmail(email) finds and returns the first record in the database where the email matches the email given
 func FindUserByEmail(email string) (*User, error) {
 	var user User
 	err := Database.Where("email = ?", email).First(&user).Error
