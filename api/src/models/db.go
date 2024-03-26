@@ -6,7 +6,11 @@ import (
 	// provides the PostgreSQL database driver for GORM, allowing communication
 	// with a PostgreSQL database.
 	"gorm.io/gorm"
-	// the GORM package, which provides utilities for interacting with databases.
+	// the GORM package, that abstracts away the low-level SQL operations and
+	// provides a higher-level API for working with databases. GORM allows for
+	// its own internal structs to be embedded into the code structs.
+	// gorm.Model for example contains fields that store info about creation
+	// updating or deletion of the struct containing it.
 	"os"
 )
 
@@ -23,15 +27,15 @@ func OpenDatabaseConnection() {
 	// function responsible for establishing a connection to the PostgreSQL database.
 	connection_string := os.Getenv("POSTGRES_URL")
 	// This code retrieves the PostgreSQL connection string from the environment variable
-	POSTGRES_URL = "PROTOCOL(postgres) :// HOST_IP (localhost and port) / DATABASE_NAME"
+	// POSTGRES_URL = "PROTOCOL(postgres) :// HOST_IP (localhost and port) / DATABASE_NAME"
 
 	// If we were using a cloud database like the Render Database service for PostgreSQL,
 	// the connection string would typically contain additional information such as the
 	// username, password, and SSL/TLS configuration.
 	// The above line would look like this instead:
-	connection_string := os.Getenv("POSTGRES_URL_EXTERNAL")
+	// connection_string := os.Getenv("POSTGRES_URL_EXTERNAL")
 	// and it would refer to a slightly different environment variable:
-	POSTGRES_URL_EXTERNAL = "PROTOCOL (postgres) :// USERNAME : PASSWORD @ HOSTNAME . frankfurt-postgres.render.com / DATABASE NAME"
+	// POSTGRES_URL_EXTERNAL = "PROTOCOL (postgres) :// USERNAME : PASSWORD @ HOSTNAME . frankfurt-postgres.render.com / DATABASE NAME"
 
 	fmt.Println(connection_string)
 	// prints the connection string on the backend terminal for debugging purposes
