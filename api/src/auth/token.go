@@ -14,9 +14,8 @@ type AuthToken struct {
 	UserID    string
 }
 
-var secret = os.Getenv("JWT_SECRET")
-
 func GenerateToken(userID string) (string, error) {
+	secret := os.Getenv("JWT_SECRET")
 	now := time.Now()
 	/*
 	 * Creates a token variable that creates a new webtoken, signs it, and maps its three values with a userID,
@@ -27,33 +26,30 @@ func GenerateToken(userID string) (string, error) {
 		"iat": jwt.NewNumericDate(now),
 		"exp": jwt.NewNumericDate(now.Add(time.Minute * 10)),
 	})
-	// This is then returned and signed into a string of bytes,
-	//  and into our secret environment variable
+	// This is then returned and signed into a string of bytes, and into our secret environment variable
 	return token.SignedString([]byte(secret))
 }
 
 func DecodeToken(tokenString string) (AuthToken, error) {
+	secret := os.Getenv("JWT_SECRET")
 	/*
 	 * First two lines take the code and parse it using the jwt package. Within it,
 	 * there is a pointer to the jwt.Token, presumably to pull this function and apply it to the tokenString.
 	 */
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		// If it is ok, it will move on to the token.Header line, otherwise it will raise an error
-		// It will then return the decoded token back into secrets and no error if there is none
-		return secret, nil
+		return []byte(secret), nil
 	})
-	// From here the authToken is created proper with the MapClaims function,
-	// which is then output as the AuthToken proper or an error if there is one
-	claims, ok := token.Claims.(jwt.MapClaims)
 
-	if ok {
-		return createAuthTokenFromClaims(claims)
-	} else {
+	if err != nil {
 		return AuthToken{}, err
 	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return AuthToken{}, fmt.Errorf("something is wrong")
+	}
+
+	return createAuthTokenFromClaims(claims)
 }
 
 func (authToken AuthToken) IsValid() bool {
