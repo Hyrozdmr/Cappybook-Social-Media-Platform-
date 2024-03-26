@@ -28,9 +28,9 @@ func OpenDatabaseConnection() {
 	// If we were using a cloud database like the Render Database service for PostgreSQL,
 	// the connection string would typically contain additional information such as the
 	// username, password, and SSL/TLS configuration.
-	// The line would look like:
+	// The above line would look like this instead:
 	connection_string := os.Getenv("POSTGRES_URL_EXTERNAL")
-	// and we would call it
+	// and it would refer to a slightly different environment variable:
 	POSTGRES_URL_EXTERNAL = "PROTOCOL (postgres) :// USERNAME : PASSWORD @ HOSTNAME . frankfurt-postgres.render.com / DATABASE NAME"
 
 	fmt.Println(connection_string)
