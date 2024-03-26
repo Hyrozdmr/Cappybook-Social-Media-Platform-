@@ -7,8 +7,8 @@ import (
 )
 
 type Post struct {
-	gorm.Model // The gorm model provides common fields like ID, CreatedAt, UpdatedAt and DeletedAt
-	// **gorm.Model LIKELY TO BE USEFUL WHEN WE NEED TO ADD THE RELEVANT DATES**
+	gorm.Model // gorm.Model creates the following common fields automatically; ID (unit / gorm:"primaryKey"), CreatedAt (time.Time), UpdatedAt(time.Time), DeletedAt (gorm.DeletedAt / gorm:"index")
+	// ** WE CAN PROBABLY ADD 'CreatedAt' TO JSONPost TO BE ABLE TO USE IN FRONTEND **
 	Message string `json:"message"`
 }
 
@@ -30,8 +30,8 @@ func FetchAllPosts() (*[]Post, error) {
 	fmt.Println(posts) // Prints out the slice (likely used for debugging)
 
 	if err != nil {
-		return &[]Post{}, err
+		return &[]Post{}, err // Returns a pointer to an empty slice of Post structs and the error (if error)
 	}
 
-	return &posts, nil
+	return &posts, nil // Returns a pointer to the 'posts' slice (if successful)
 }
