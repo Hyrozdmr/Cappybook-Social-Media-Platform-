@@ -1,12 +1,12 @@
-#root {
+/* #root {
     margin: 0;
     text-align: center;
-}
+} */
 
 .home {
     display: flex;
     height: 100vh;
-    min-width: 1500px;
+    min-width: 1440px;
     justify-content: center;
 }
 
