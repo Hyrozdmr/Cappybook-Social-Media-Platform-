@@ -10,9 +10,9 @@ import (
 )
 
 type JSONPost struct {
-	ID        uint      `json:"_id"`
-	Message   string    `json:"message"`
-	CreatedAt time.Time `json:"created_at"`
+	ID        uint   `json:"_id"`
+	Message   string `json:"message"`
+	CreatedAt string `json:"created_at"`
 	// add fields that would be needed here, important to comm
 	// this to FE
 }
@@ -35,7 +35,7 @@ func GetAllPosts(ctx *gin.Context) {
 		jsonPosts = append(jsonPosts, JSONPost{
 			Message:   post.Message,
 			ID:        post.ID,
-			CreatedAt: post.CreatedAt,
+			CreatedAt: post.CreatedAt.Format(time.RFC3339),
 		})
 	}
 
