@@ -11,6 +11,7 @@ type Post struct {
 	gorm.Model
 	Message   string    `json:"message"`
 	CreatedAt time.Time `json:"created_at"`
+	Likes     int       `json:"likes"`
 }
 
 func (post *Post) Save() (*Post, error) {

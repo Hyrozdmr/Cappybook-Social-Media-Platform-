@@ -13,6 +13,7 @@ type JSONPost struct {
 	ID        uint   `json:"_id"`
 	Message   string `json:"message"`
 	CreatedAt string `json:"created_at"`
+	Likes     int    `json:"likes"`
 	// add fields that would be needed here, important to comm
 	// this to FE
 }
@@ -63,10 +64,11 @@ func CreatePost(ctx *gin.Context) {
 
 	PostTime := time.Now()
 	// formattedTime := PostTime.Format("2006-01-02 15:04:05")
-
+	LikeCount := 0
 	newPost := models.Post{
 		Message:   requestBody.Message,
 		CreatedAt: PostTime,
+		Likes:     LikeCount,
 	}
 
 	_, err = newPost.Save()
