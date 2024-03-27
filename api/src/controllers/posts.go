@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
@@ -9,8 +10,11 @@ import (
 )
 
 type JSONPost struct {
-	ID      uint   `json:"_id"`
-	Message string `json:"message"`
+	ID        uint      `json:"_id"`
+	Message   string    `json:"message"`
+	CreatedAt time.Time `json:"created_at"`
+	// add fields that would be needed here, important to comm
+	// this to FE
 }
 
 func GetAllPosts(ctx *gin.Context) {
@@ -29,8 +33,9 @@ func GetAllPosts(ctx *gin.Context) {
 	jsonPosts := make([]JSONPost, 0)
 	for _, post := range *posts {
 		jsonPosts = append(jsonPosts, JSONPost{
-			Message: post.Message,
-			ID:      post.ID,
+			Message:   post.Message,
+			ID:        post.ID,
+			CreatedAt: post.CreatedAt,
 		})
 	}
 
@@ -38,7 +43,8 @@ func GetAllPosts(ctx *gin.Context) {
 }
 
 type createPostRequestBody struct {
-	Message string
+	Message   string
+	CreatedAt time.Time
 }
 
 func CreatePost(ctx *gin.Context) {
@@ -56,7 +62,8 @@ func CreatePost(ctx *gin.Context) {
 	}
 
 	newPost := models.Post{
-		Message: requestBody.Message,
+		Message:   requestBody.Message,
+		CreatedAt: requestBody.CreatedAt,
 	}
 
 	_, err = newPost.Save()
