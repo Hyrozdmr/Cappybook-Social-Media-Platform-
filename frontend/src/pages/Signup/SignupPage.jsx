@@ -13,7 +13,7 @@ export const SignupPage = () => {
     try {
       await signup(email, password);
       console.log("redirecting...:");
-      navigate("/login");
+      navigate("/posts");
     } catch (err) {
       console.error(err);
       navigate("/signup");
