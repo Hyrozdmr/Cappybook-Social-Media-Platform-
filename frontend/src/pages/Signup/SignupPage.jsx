@@ -63,6 +63,7 @@ export const SignupPage = () => {
               />
             </form>
           </div>
+          {isSuccess && <p>Account created successfully!</p>}
         </div>
         <div className="right-half">
           <h3>Login Here</h3>
