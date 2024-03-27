@@ -6,6 +6,7 @@ import { login } from "../../services/authentication";
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -15,8 +16,8 @@ export const LoginPage = () => {
       localStorage.setItem("token", token);
       navigate("/posts");
     } catch (err) {
-      console.error(err);
       navigate("/login");
+      setErrorMessage("User does not exist or invalid credentials.");
     }
   };
 
@@ -31,6 +32,7 @@ export const LoginPage = () => {
   return (
     <>
       <h2>Login</h2>
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
