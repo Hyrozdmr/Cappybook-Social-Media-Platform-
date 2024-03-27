@@ -83,3 +83,39 @@ func CreatePost(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "token": token})
 }
+
+func UpdatePostLikes(ctx *gin.Context) {
+	var myPost JSONPost
+	err := ctx.BindJSON(&myPost)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+	// possible template for future error check
+	// if len(requestBody.Message) == 0 {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"message": "Post message empty"})
+	// 	return
+	// }
+
+	PostTime := time.Now()
+	// formattedTime := PostTime.Format("2006-01-02 15:04:05")
+	LikeCount := 0
+	newPost := models.Post{
+		Message:   requestBody.Message,
+		CreatedAt: PostTime,
+		Likes:     LikeCount,
+	}
+
+	_, err = newPost.Save()
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	val, _ := ctx.Get("userID")
+	userID := val.(string)
+	token, _ := auth.GenerateToken(userID)
+
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "token": token})
+}
