@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import "./SignupPage.css"; // Import CSS for the signup page
+import "./SignupPage.css";
 import { signup } from "../../services/authentication";
 
 export const SignupPage = () => {
@@ -58,14 +58,11 @@ export const SignupPage = () => {
               />
             </form>
           </div>
-          <div className="login">
-            <Link to="/login">Login</Link>
-          </div>
         </div>
         <div className="right-half">
           <h3>Login Here</h3>
           <p>If you already have an account, login here:</p>
-          <Link className="login-link" to="/login">Login</Link>
+          <Link className="login" to="/login">Login</Link>
         </div>
       </div>
   );

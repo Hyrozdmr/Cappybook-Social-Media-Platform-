@@ -1,3 +1,8 @@
+#root {
+    margin: 0;
+    text-align: center;
+}
+
 .home {
     display: flex;
     height: 100vh;
@@ -61,7 +66,7 @@
     padding: 10px;
     margin-top: 10px;
     background-color: #aaecaa;
-    color: #646cff;
+    color: #ffffff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
