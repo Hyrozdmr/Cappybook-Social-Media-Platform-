@@ -2,14 +2,15 @@ package models
 
 import (
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type Post struct {
 	gorm.Model
-	Message   string `json:"message"`
-	CreatedAt string `json:"created_at"`
+	Message   string    `json:"message"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (post *Post) Save() (*Post, error) {
