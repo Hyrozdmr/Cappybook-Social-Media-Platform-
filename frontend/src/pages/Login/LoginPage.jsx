@@ -6,6 +6,7 @@ import { login } from "../../services/authentication";
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -15,8 +16,8 @@ export const LoginPage = () => {
       localStorage.setItem("token", token);
       navigate("/posts");
     } catch (err) {
-      console.error(err);
       navigate("/login");
+      setErrorMessage("User does not exist or invalid credentials.");
     }
   };
 
@@ -35,26 +36,24 @@ export const LoginPage = () => {
             <form className="login-form" onSubmit={handleSubmit}>
               <h1>Login</h1>
               <h2>Already got an account?</h2>
-              <input
-                  id="email"
-                  type="text"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email"
-              />
-              <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-              />
-              <input
-                  role="submit-button"
-                  id="submit"
-                  type="submit"
-                  value="Submit"
-              />
+              {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+              <form onSubmit={handleSubmit}>
+              <label htmlFor="email">Email:</label>
+            <input
+              id="email"
+              type="text"
+              value={email}
+              onChange={handleEmailChange}
+            />
+            <label htmlFor="password">Password:</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+            <input role="submit-button" id="submit" type="submit" value="Submit" />
+          </form>
             </form>
           </div>
         </div>
