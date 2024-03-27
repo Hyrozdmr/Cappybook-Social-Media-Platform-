@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -10,9 +11,9 @@ import (
 )
 
 type JSONPost struct {
-	ID        uint      `json:"_id"`
-	Message   string    `json:"message"`
-	CreatedAt time.Time `json:"created_at"`
+	ID      uint   `json:"_id"`
+	Message string `json:"message"`
+	// CreatedAt time.Time `json:"created_at"`
 	// add fields that would be needed here, important to comm
 	// this to FE
 }
@@ -33,9 +34,9 @@ func GetAllPosts(ctx *gin.Context) {
 	jsonPosts := make([]JSONPost, 0)
 	for _, post := range *posts {
 		jsonPosts = append(jsonPosts, JSONPost{
-			Message:   post.Message,
-			ID:        post.ID,
-			CreatedAt: post.CreatedAt,
+			Message: post.Message,
+			ID:      post.ID,
+			// CreatedAt: post.CreatedAt,
 		})
 	}
 
@@ -61,9 +62,12 @@ func CreatePost(ctx *gin.Context) {
 		return
 	}
 
+	PostTime := time.Now()
+	formattedTime := PostTime.Format("2006-01-02 15:04:05")
+
 	newPost := models.Post{
 		Message:   requestBody.Message,
-		CreatedAt: requestBody.CreatedAt,
+		CreatedAt: fmt.Println,
 	}
 
 	_, err = newPost.Save()
