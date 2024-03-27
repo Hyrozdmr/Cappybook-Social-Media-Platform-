@@ -13,8 +13,9 @@ export const HomePage = () => {
       <div className="right-half">
         <h3>New Here?</h3>
         <p>Sign up and start sharing moments with your friends today! Join our community and explore endless possibilities together.</p>
-        <Link className="sign_up" to="/signup">Sign Up</Link>
+        <Link className="sign_up" to="/sign_up">Sign Up</Link>
       </div>
     </div>
   );
 };
+
