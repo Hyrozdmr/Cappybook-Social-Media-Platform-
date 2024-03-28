@@ -7,13 +7,15 @@ import { signup } from "../../services/authentication";
 export const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [image, setImage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false); // State for success message
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await signup(email, password);
+      await signup(email, password, username, image);
       setIsSuccess(true); // Set isSuccess to true on successful sign-up
       setTimeout(() => {
         navigate("/posts");
@@ -31,6 +33,15 @@ export const SignupPage = () => {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
+  };
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value)
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setImage(file);
   };
 
   return (
@@ -54,6 +65,18 @@ export const SignupPage = () => {
                   onChange={handlePasswordChange}
                   placeholder="Password"
               />
+              <input 
+                id="username"
+                type="text"
+                value={username}
+                onChange={handleUsernameChange}
+                placeholder="Username"
+                />
+              <input
+                id="image"
+                type="file" 
+                onChange={handleImageChange}
+                />
               <input
                   role="submit-button"
                   id="submit"
