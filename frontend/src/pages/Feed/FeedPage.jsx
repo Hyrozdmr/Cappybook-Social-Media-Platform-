@@ -20,14 +20,15 @@ export const FeedPage = () => {
     const token = localStorage.getItem("token");
     if (token) {
       getPosts(token)
-        .then((data) => {
-          setPosts(data.posts);
-          localStorage.setItem("token", data.token);
-        })
-        .catch((err) => {
-          console.error(err);
-          navigate("/login");
-        });
+          .then((data) => {
+            const sortedPosts = data.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setPosts(sortedPosts);
+            localStorage.setItem("token", data.token);
+          })
+          .catch((err) => {
+            console.error(err);
+            navigate("/login");
+          });
     }
   }, [navigate]);
 
@@ -40,15 +41,22 @@ export const FeedPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await createPosts(token, post);
+      const createdPostResponse = await createPosts(token, post);
       const updatedPosts = await getPosts(token);
-      setPosts(updatedPosts.posts);
+      const sortedPosts = updatedPosts.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      setPosts(sortedPosts);
       setPost("");
       localStorage.setItem("token", updatedPosts.token);
     } catch (err) {
       console.error(err);
     }
   }
+
+
+
+
+
+
 
   const handlePostChange = (event) => {
     setPost(event.target.value);

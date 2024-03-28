@@ -28,18 +28,16 @@ export const login = async (email, password) => {
   }
 };
 
-export const signup = async (email, password) => {
-  const payload = {
-    email: email,
-    password: password,
-  };
+export const signup = async (email, password, username, image) => {
+  const formData = new FormData();
+  formData.append('email', email);
+  formData.append('password', password);
+  formData.append('username', username);
+  formData.append('image', image);
 
   const requestOptions = {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    body: formData,
   };
 
   let response = await fetch(`${BACKEND_URL}/users`, requestOptions);
