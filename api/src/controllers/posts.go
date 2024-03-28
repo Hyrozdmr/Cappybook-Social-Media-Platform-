@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -37,6 +38,7 @@ func GetAllPosts(ctx *gin.Context) {
 			Message:   post.Message,
 			ID:        post.ID,
 			CreatedAt: post.CreatedAt.Format(time.RFC3339),
+			Likes:     post.Likes,
 		})
 	}
 
@@ -85,15 +87,27 @@ func CreatePost(ctx *gin.Context) {
 }
 
 func UpdatePostLikes(ctx *gin.Context) {
-	var requestBody models.Post
-	post, err := models.FetchSinglePost(requestBody.ID)
-	//err := ctx.BindJSON(&requestBody)
+	// Get the post ID from the URL path parameter
+	postID, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid post ID"})
+		return
+	}
+
+	// Fetch the post from the database
+	post, err := models.FetchSinglePost(uint(postID))
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
 		return
 	}
-	//post, err := models.FetchSinglePost(requestBody.ID)
 
+	// Check if the post is nil
+	if post == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		return
+	}
+
+	// Increment the likes count
 	likedPost, err := post.SaveLike()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save like"})
