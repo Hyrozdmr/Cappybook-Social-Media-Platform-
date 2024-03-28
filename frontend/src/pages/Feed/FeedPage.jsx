@@ -60,17 +60,11 @@ export const FeedPage = () => {
 
     return (
         <>
-            <div className="container">
+            <div className="feed-container">
 
                 <h2>Posts</h2>
-                <div className="feed" role="feed">
-                    {posts.map((post) => (
-                        <Post post={post} key={post._id} />
-                    ))}
-                </div>
-
                 <form onSubmit={handleSubmit}>
-                    <div className="create-post">
+                    <div className="feed-create-post">
                         <input
                             type="text"
                             value={post}
@@ -78,6 +72,17 @@ export const FeedPage = () => {
                         <input role="submit-button" id="submit" type="submit" value="Submit" />
                     </div>
                 </form>
+
+                <div className="feed-all-posts" role="feed">
+
+                        {posts.map((post) => (
+                            <div className="feed-post"> <Post post={post} key={post._id} />  </div>
+                        ))}
+
+
+                </div>
+
+
 
             </div>
 
