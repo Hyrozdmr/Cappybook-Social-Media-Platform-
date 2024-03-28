@@ -46,14 +46,19 @@ func GetAllPosts(ctx *gin.Context) {
 }
 
 func GetSpecificPost(ctx *gin.Context) {
-	// postID := ctx.Param("postID")
-	postID, err := strconv.ParseUint(ctx.Param("postID"), 10, 64)
-	post, err := models.FetchSpecificPost(postID)
+	postIDStr := ctx.Param("id")
+	postID, err := strconv.ParseUint(postIDStr, 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid post ID"})
+		return
+	}
 
+	post, err := models.FetchSpecificPost(postID)
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
 	}
+
 	jsonPost := JSONPost{
 		Message:   post.Message,
 		ID:        post.ID,
@@ -136,10 +141,20 @@ func UpdatePostLikes(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Like added successfully", "liked_post": likedPost})
 }
 
+
 // func (postID uint64) DeletePost(ctx *gin.Context) {
-// 	// var requestBody createPostRequestBody
-// 	// err := ctx.BindJSON(&requestBody)
+//  // var requestBody createPostRequestBody
+//  // err := ctx.BindJSON(&requestBody)
 // 	postToDelete, err := GetSpecificPost(postID)
+//  	if err != nil {
+//     	ctx.JSON(http.StatusBadRequest, gin.H{"deletion error": err})
+//     	return	
+// 	}
+// 	if err := Database.Delete(postToDelete).Error; err != nil {
+//     return err
+// 	}
+// 	return nil
+// }
 
 // 	if err != nil {
 // 		ctx.JSON(http.StatusBadRequest, gin.H{"deletion error": err})

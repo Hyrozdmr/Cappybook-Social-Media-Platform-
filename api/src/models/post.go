@@ -45,18 +45,7 @@ func FetchAllPosts() (*[]Post, error) {
 	return &posts, nil
 }
 
-// func FetchSinglePost() (*[]Post, error) {
-// 	var posts []Post
-// 	err := Database.Find(&posts).Error
 
-// 	fmt.Println(posts)
-
-// 	if err != nil {
-// 		return &[]Post{}, err
-// 	}
-
-// 	return &posts, nil
-// }
 
 func FetchSpecificPost(postID uint64) (*Post, error) {
 	var post Post
