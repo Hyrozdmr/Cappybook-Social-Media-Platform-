@@ -7,14 +7,18 @@ import { signup } from "../../services/authentication";
 export const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false); // State for success message
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       await signup(email, password);
-      console.log("redirecting...:");
-      navigate("/posts");
+      setIsSuccess(true); // Set isSuccess to true on successful sign-up
+      setTimeout(() => {
+        navigate("/posts");
+      }, 1000);
+
     } catch (err) {
       console.error(err);
       navigate("/signup");
@@ -58,6 +62,7 @@ export const SignupPage = () => {
               />
             </form>
           </div>
+          {isSuccess && <p>Account created successfully!</p>}
         </div>
         <div className="right-half">
           <h3>Login Here</h3>
