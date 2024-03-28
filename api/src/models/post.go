@@ -58,7 +58,7 @@ func FetchAllPosts() (*[]Post, error) {
 // 	return &posts, nil
 // }
 
-func FetchSinglePost(postID uint) (*Post, error) {
+func FetchSpecificPost(postID uint64) (*Post, error) {
 	var post Post
 	err := Database.First(&post, postID).Error
 
