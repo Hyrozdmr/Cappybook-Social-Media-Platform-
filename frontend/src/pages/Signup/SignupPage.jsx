@@ -14,7 +14,6 @@ export const SignupPage = () => {
     event.preventDefault();
     try {
       await signup(email, password);
-   
       setIsSuccess(true); // Set isSuccess to true on successful sign-up
       setTimeout(() => {
         navigate("/posts");

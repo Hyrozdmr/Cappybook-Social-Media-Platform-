@@ -37,23 +37,21 @@ export const LoginPage = () => {
               <h1>Login</h1>
               <h2>Already got an account?</h2>
               {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-              <form onSubmit={handleSubmit}>
-              <label htmlFor="email">Email:</label>
-            <input
-              id="email"
-              type="text"
-              value={email}
-              onChange={handleEmailChange}
-            />
-            <label htmlFor="password">Password:</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-            <input role="submit-button" id="submit" type="submit" value="Submit" />
-          </form>
+                <label htmlFor="email">Email:</label>
+                <input
+                  id="email"
+                  type="text"
+                  value={email}
+                  onChange={handleEmailChange}
+                />
+                <label htmlFor="password">Password:</label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+                <input role="submit-button" id="submit" type="submit" value="Submit" />
             </form>
           </div>
         </div>
