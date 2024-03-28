@@ -5,11 +5,15 @@ import { getPosts } from "../../services/posts";
 import { createPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
 
+import Comment from "../../components/Comment/Comment";
+import { createComment } from "../../services/posts";
+
 import "./FeedPage.scss";
 
 export const FeedPage = () => {
   const [posts, setPosts] = useState([]);
   const [post, setPost] = useState("");
+  const [comment, setComment] = useState(""); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,6 +54,25 @@ export const FeedPage = () => {
     setPost(event.target.value);
   }
 
+
+  const handleCommentSubmit = async (postId, userId, event) => {
+    event.preventDefault();
+    try {
+      await createComment(token, postId, userId, comment); // Assuming you have a createComment function
+      const updatedPosts = await getPosts(token);
+      setPosts(updatedPosts.posts);
+      setComment("");
+      localStorage.setItem("token", updatedPosts.token);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+
+
   return (
     <>
     <div className="container">
@@ -61,6 +84,21 @@ export const FeedPage = () => {
         ))}
       </div>
 
+      <form onSubmit={(event) => handleCommentSubmit(post._id, post.user._id, event)}>
+              <input
+                type="text"
+                value={comment}
+                onChange={handleCommentChange}
+                placeholder="Write a comment..."
+              />
+              <button type="submit">Add Comment</button>
+            </form>
+            {/* Render comments for each post */}
+            {post.comments.map((comment) => (
+              <Comment key={comment._id} comment={comment} />
+            ))}
+          </div>
+    <div>
       <form onSubmit={handleSubmit}>
         <div className="create-post">
           <input
@@ -70,9 +108,11 @@ export const FeedPage = () => {
           <input role="submit-button" id="submit" type="submit" value="Submit" />
         </div>
       </form>
-        
     </div>
       
     </>
   );
 };
+
+
+
