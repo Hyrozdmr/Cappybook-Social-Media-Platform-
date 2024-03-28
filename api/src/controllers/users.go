@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 )
 
@@ -64,5 +65,8 @@ func CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "OK"})
+	userID := string(newUser.ID)
+	token, _ := auth.GenerateToken(userID)
+
+	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "token": token})
 }

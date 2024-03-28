@@ -4,7 +4,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 export const login = async (email, password) => {
   const payload = {
     email: email,
-    password: password,
+    password: password
   };
 
   const requestOptions = {
@@ -44,7 +44,8 @@ export const signup = async (email, password, username, image) => {
 
   // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
   if (response.status === 201) {
-    return;
+    let data = await response.json();
+    return data.token;
   } else {
     throw new Error(
       `Received status ${response.status} when signing up. Expected 201`

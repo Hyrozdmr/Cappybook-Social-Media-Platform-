@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./SignupPage.css";
-import { signup } from "../../services/authentication";
+import { signup, login } from "../../services/authentication";
 
 export const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -15,8 +15,9 @@ export const SignupPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await signup(email, password, username, image);
-      setIsSuccess(true); // Set isSuccess to true on successful sign-up
+      const token = await signup(email, password, username, image);
+      localStorage.setItem("token", token);
+      setIsSuccess(true);
       setTimeout(() => {
         navigate("/posts");
       }, 1000);
