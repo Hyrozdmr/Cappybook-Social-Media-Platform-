@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,7 @@ type JSONPost struct {
 	ID        uint   `json:"_id"`
 	Message   string `json:"message"`
 	CreatedAt string `json:"created_at"`
+	Likes     int    `json:"likes"`
 	// add fields that would be needed here, important to comm
 	// this to FE
 }
@@ -36,6 +38,7 @@ func GetAllPosts(ctx *gin.Context) {
 			Message:   post.Message,
 			ID:        post.ID,
 			CreatedAt: post.CreatedAt.Format(time.RFC3339),
+			Likes:     post.Likes,
 		})
 	}
 
@@ -63,10 +66,11 @@ func CreatePost(ctx *gin.Context) {
 
 	PostTime := time.Now()
 	// formattedTime := PostTime.Format("2006-01-02 15:04:05")
-
+	LikeCount := 0
 	newPost := models.Post{
 		Message:   requestBody.Message,
 		CreatedAt: PostTime,
+		Likes:     LikeCount,
 	}
 
 	_, err = newPost.Save()
@@ -80,4 +84,35 @@ func CreatePost(ctx *gin.Context) {
 	token, _ := auth.GenerateToken(userID)
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "token": token})
+}
+
+func UpdatePostLikes(ctx *gin.Context) {
+	// Get the post ID from the URL path parameter
+	postID, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid post ID"})
+		return
+	}
+
+	// Fetch the post from the database
+	post, err := models.FetchSinglePost(uint(postID))
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		return
+	}
+
+	// Check if the post is nil
+	if post == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		return
+	}
+
+	// Increment the likes count
+	likedPost, err := post.SaveLike()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save like"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Like added successfully", "liked_post": likedPost})
 }
