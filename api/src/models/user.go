@@ -8,6 +8,11 @@ type User struct {
 	gorm.Model
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Username string `json:"username"`
+	Filename string
+	FileSize int64
+	FileType string
+	FileData []byte
 }
 
 func (user *User) Save() (*User, error) {
