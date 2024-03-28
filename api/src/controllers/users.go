@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 )
 
@@ -65,4 +66,19 @@ func CreateUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "OK"})
+}
+
+func GetUser(ctx *gin.Context) {
+	// val, _ := ctx.Get("userID")
+	userID := ctx.Param("id") // This is to check response in postman
+	// userID := val.(string)
+	token, _ := auth.GenerateToken(userID)
+
+	user, err := models.FindUser(userID)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"user": user, "token": token})
 }
