@@ -65,7 +65,10 @@ func CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "OK"})
+	userID := string(newUser.ID)
+	token, _ := auth.GenerateToken(userID)
+
+	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "token": token})
 }
 
 func GetUser(ctx *gin.Context) {
