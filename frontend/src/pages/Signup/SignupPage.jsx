@@ -30,7 +30,7 @@ export const SignupPage = () => {
   };
 
   return (
-      <div className="home">
+      <div className="container">
         <div className="left-half">
           <div className="signup-container">
             <form className="signup-form" onSubmit={handleSubmit}>
