@@ -12,3 +12,10 @@ func setupPostRoutes(baseRouter *gin.RouterGroup) {
 	posts.POST("", middleware.AuthenticationMiddleware, controllers.CreatePost)
 	posts.GET("", middleware.AuthenticationMiddleware, controllers.GetAllPosts)
 }
+
+
+func setupLikePostRoute(baseRouter *gin.RouterGroup) {
+	post := baseRouter.Group("/posts/:id/likes")
+	post.PUT("", middleware.AuthenticationMiddleware, controllers.UpdatePostLikes)
+}
+

@@ -7,4 +7,5 @@ func SetupRoutes(engine *gin.Engine) {
 	setupUserRoutes(apiRouter)
 	setupPostRoutes(apiRouter)
 	setupAuthenticationRoutes(apiRouter)
+	setupLikePostRoute(apiRouter)
 }
