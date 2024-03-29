@@ -15,6 +15,7 @@ type JSONPost struct {
 	Message   string `json:"message"`
 	CreatedAt string `json:"created_at"`
 	Likes     int    `json:"likes"`
+	UserID    string `json:"user_id"`
 	// add fields that would be needed here, important to comm
 	// this to FE
 }
@@ -39,6 +40,7 @@ func GetAllPosts(ctx *gin.Context) {
 			ID:        post.ID,
 			CreatedAt: post.CreatedAt.Format(time.RFC3339),
 			Likes:     post.Likes,
+			UserID:    post.UserID,
 		})
 	}
 
@@ -64,6 +66,7 @@ func GetSpecificPost(ctx *gin.Context) {
 		ID:        post.ID,
 		CreatedAt: post.CreatedAt.Format(time.RFC3339),
 		Likes:     post.Likes,
+		UserID:    post.UserID,
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost})
@@ -91,7 +94,15 @@ func CreatePost(ctx *gin.Context) {
 	PostTime := time.Now()
 	// formattedTime := PostTime.Format("2006-01-02 15:04:05")
 	LikeCount := 0
+	// getting the user id from the gin context and passing an error
+	// if there is none
+	userID, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR": "USER ID NOT FOUND IN CONTEXT"})
+		return
+	}
 	newPost := models.Post{
+		UserID:    userID.(string), // cast the user ID to a string
 		Message:   requestBody.Message,
 		CreatedAt: PostTime,
 		Likes:     LikeCount,
@@ -103,11 +114,7 @@ func CreatePost(ctx *gin.Context) {
 		return
 	}
 
-	val, _ := ctx.Get("userID")
-	userID := val.(string)
-	token, _ := auth.GenerateToken(userID)
-
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "token": token})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created"})
 }
 
 func UpdatePostLikes(ctx *gin.Context) {
@@ -141,14 +148,13 @@ func UpdatePostLikes(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Like added successfully", "liked_post": likedPost})
 }
 
-
 // func (postID uint64) DeletePost(ctx *gin.Context) {
 //  // var requestBody createPostRequestBody
 //  // err := ctx.BindJSON(&requestBody)
 // 	postToDelete, err := GetSpecificPost(postID)
 //  	if err != nil {
 //     	ctx.JSON(http.StatusBadRequest, gin.H{"deletion error": err})
-//     	return	
+//     	return
 // 	}
 // 	if err := Database.Delete(postToDelete).Error; err != nil {
 //     return err

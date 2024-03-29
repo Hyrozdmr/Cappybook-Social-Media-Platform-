@@ -9,6 +9,7 @@ import (
 
 type Post struct {
 	gorm.Model
+	UserID    string    `json:"user_id"`
 	Message   string    `json:"message"`
 	CreatedAt time.Time `json:"created_at"`
 	Likes     int       `json:"likes"`
@@ -44,8 +45,6 @@ func FetchAllPosts() (*[]Post, error) {
 
 	return &posts, nil
 }
-
-
 
 func FetchSpecificPost(postID uint64) (*Post, error) {
 	var post Post
