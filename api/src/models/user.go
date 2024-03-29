@@ -16,6 +16,11 @@ type User struct {
 }
 
 func (user *User) Save() (*User, error) {
+	// existingUser, err := FindUserByEmail(user.Email)
+	// if existingUser != nil {
+	// 	return &User{}, err
+	// }
+
 	err := Database.Create(user).Error
 	if err != nil {
 		return &User{}, err
@@ -36,12 +41,16 @@ func FindUser(id string) (*User, error) {
 }
 
 func FindUserByEmail(email string) (*User, error) {
-	var user User
-	err := Database.Where("email = ?", email).First(&user).Error
+    var user User
+    err := Database.Where("email = ?", email).First(&user).Error
 
-	if err != nil {
-		return &User{}, err
-	}
+    if err != nil && err == gorm.ErrRecordNotFound {
+        return nil, nil
+    }
 
-	return &user, nil
+    if err != nil {
+        return nil, err
+    }
+
+    return &user, nil
 }

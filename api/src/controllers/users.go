@@ -3,6 +3,7 @@ package controllers
 import (
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
@@ -58,6 +59,48 @@ func CreateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Must supply username and password"})
 		return
 	}
+
+	if newUser.Email[0] == '@' {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid email"})
+		return
+	}
+
+	if !strings.Contains(newUser.Email, "@") {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid email"})
+		return
+	}
+
+	if strings.Count(newUser.Email, "@") > 1 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid email"})
+		return
+	}
+
+	if strings.Contains(newUser.Email, " ") {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid email"})
+		return
+	}
+
+	existingUser, err := models.FindUserByEmail(newUser.Email)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	if existingUser != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Email already exists"})
+		return
+	}
+
+	// existingUser, err := models.FindUserByEmail(newUser.Email)
+	// if err != nil {
+	// 	SendInternalError(ctx, err)
+	// 	return
+	// }
+
+	// if existingUser != nil {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"message": "Email already exists"})
+	// 	return
+	// }
 
 	_, err = newUser.Save()
 	if err != nil {
