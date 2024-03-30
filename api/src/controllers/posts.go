@@ -110,6 +110,37 @@ func CreatePost(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "token": token})
 }
 
+func DeletePost(ctx *gin.Context) {
+	// Get the post ID from the URL path parameter
+	postID, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid post ID"})
+		return
+	}
+
+	// Fetch the post from the database
+	post, err := models.FetchSpecificPost(uint64(postID))
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		return
+	}
+
+	// Check if the post is nil
+	if post == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		return
+	}
+
+	// Delete post from database
+	DeletedPost, err := post.Delete()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete post"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"success": true, "message": "Post deleted successfully", "deleted post": DeletedPost})
+}
+
 func UpdatePostLikes(ctx *gin.Context) {
 	// Get the post ID from the URL path parameter
 	postID, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
@@ -141,14 +172,13 @@ func UpdatePostLikes(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Like added successfully", "liked_post": likedPost})
 }
 
-
 // func (postID uint64) DeletePost(ctx *gin.Context) {
 //  // var requestBody createPostRequestBody
 //  // err := ctx.BindJSON(&requestBody)
 // 	postToDelete, err := GetSpecificPost(postID)
 //  	if err != nil {
 //     	ctx.JSON(http.StatusBadRequest, gin.H{"deletion error": err})
-//     	return	
+//     	return
 // 	}
 // 	if err := Database.Delete(postToDelete).Error; err != nil {
 //     return err
