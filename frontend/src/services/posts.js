@@ -42,3 +42,22 @@ export const createPosts = async (token, post) => {
   const data = await response.json();
   return data;
 };
+
+export const updatePostLikes = async (token, postId) => {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/posts/${postId}/likes`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to update post likes");
+  }
+
+  const data = await response.json();
+  return data;
+};
