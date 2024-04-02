@@ -24,7 +24,7 @@ func main() {
 	// }
 	// testPost.Save()
 
-	post, err := models.FetchSpecificPost(42)
+	post, err := models.FetchSpecificPost(44)
 	fmt.Println("Error: ", err)
 	fmt.Println("UserID: ", post.UserID)
 	fmt.Println("Message: ", post.Message)

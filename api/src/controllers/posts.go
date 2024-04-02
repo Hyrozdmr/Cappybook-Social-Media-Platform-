@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -45,11 +44,10 @@ func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incomin
 	// Convert posts to JSON Structs
 	jsonPosts := make([]JSONPost, 0)
 	for _, post := range *posts {
-		fmt.Println(post.UserID)
-		user, err := models.FindUser(post.UserID)
-		if err != nil {
-			SendInternalError(ctx, err)
-		}
+		// user, err := models.FindUser(post.UserID)
+		// if err != nil {
+		// 	SendInternalError(ctx, err)
+		// }
 
 		jsonPosts = append(jsonPosts, JSONPost{
 			Message:   post.Message,
@@ -57,11 +55,11 @@ func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incomin
 			CreatedAt: post.CreatedAt.Format(time.RFC3339),
 			Likes:     post.Likes,
 			// UserID:    post.UserID,
-			User: JSONUser{
-				UserID:   user.ID,
-				Username: user.Username,
-				Image:    user.FileData,
-			},
+			// User: JSONUser{
+			// 	UserID:   user.ID,
+			// 	Username: user.Username,
+			// 	Image:    user.FileData,
+			// },
 		})
 	}
 
@@ -144,7 +142,7 @@ func CreatePost(ctx *gin.Context) {
 	// userID := val.(string)
 	// token, _ := auth.GenerateToken(userID)
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created"}) //sends confirmation message back if successfully saved
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "userID": newPost.UserID}) //sends confirmation message back if successfully saved
 }
 
 func DeletePost(ctx *gin.Context) {

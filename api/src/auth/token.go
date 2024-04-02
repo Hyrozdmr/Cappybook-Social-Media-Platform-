@@ -24,7 +24,7 @@ func GenerateToken(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userID,
 		"iat": jwt.NewNumericDate(now),
-		"exp": jwt.NewNumericDate(now.Add(time.Minute * 1)),
+		"exp": jwt.NewNumericDate(now.Add(time.Minute * 10)),
 	})
 	// This is then returned and signed into a string of bytes, and into our secret environment variable
 	return token.SignedString([]byte(secret))
