@@ -5,6 +5,7 @@ import { getPosts } from "../../services/posts";
 import { createPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
 
+
 import "./FeedPage.scss";
 
 export const FeedPage = () => {
@@ -26,7 +27,7 @@ export const FeedPage = () => {
                     navigate("/login");
                 });
         }
-    }, [navigate]);
+    }, [navigate])
 
     const token = localStorage.getItem("token");
     if (!token) {
@@ -48,16 +49,9 @@ export const FeedPage = () => {
         }
     }
 
-
-
-
-
-
-
     const handlePostChange = (event) => {
         setPost(event.target.value);
     }
-
     return (
         <>
             <div className="feed-container">
