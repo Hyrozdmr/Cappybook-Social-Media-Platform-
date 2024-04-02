@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -15,10 +16,16 @@ type JSONPost struct {
 	Message   string `json:"message"`
 	CreatedAt string `json:"created_at"`
 	Likes     int    `json:"likes"`
-	UserID    string `json:"user_id"`
+	// UserID    string
+	User JSONUser
 	// add fields that would be needed here, important to comm
 	// this to FE
+}
 
+type JSONUser struct {
+	UserID   uint   `json:"user_id"`
+	Username string `json:"username"`
+	Image    []byte `json:"image"`
 }
 
 func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incoming HTTP request
@@ -38,12 +45,23 @@ func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incomin
 	// Convert posts to JSON Structs
 	jsonPosts := make([]JSONPost, 0)
 	for _, post := range *posts {
+		fmt.Println(post.UserID)
+		user, err := models.FindUser(post.UserID)
+		if err != nil {
+			SendInternalError(ctx, err)
+		}
+
 		jsonPosts = append(jsonPosts, JSONPost{
 			Message:   post.Message,
 			ID:        post.ID,
 			CreatedAt: post.CreatedAt.Format(time.RFC3339),
 			Likes:     post.Likes,
-			UserID:    post.UserID,
+			// UserID:    post.UserID,
+			User: JSONUser{
+				UserID:   user.ID,
+				Username: user.Username,
+				Image:    user.FileData,
+			},
 		})
 	}
 
@@ -70,7 +88,7 @@ func GetSpecificPost(ctx *gin.Context) {
 		ID:        post.ID,
 		CreatedAt: post.CreatedAt.Format(time.RFC3339),
 		Likes:     post.Likes,
-		UserID:    post.UserID,
+		// UserID:    post.UserID,
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost})

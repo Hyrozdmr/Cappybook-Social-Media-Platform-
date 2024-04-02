@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -20,12 +19,20 @@ func main() {
 	models.AutoMigrateModels()
 
 	// Create a test testPost. Delete these lines when you are creating posts of your own.
-	testPost := models.Post{
-		Message: fmt.Sprintf("This is a test message created at %v!", time.Now()),
-	}
-	testPost.Save()
+	// testPost := models.Post{
+	// 	Message: fmt.Sprintf("This is a test message created at %v!", time.Now()),
+	// }
+	// testPost.Save()
+
+	post, err := models.FetchSpecificPost(42)
+	fmt.Println("Error: ", err)
+	fmt.Println("UserID: ", post.UserID)
+	fmt.Println("Message: ", post.Message)
+	fmt.Println("CreatedAt: ", post.CreatedAt)
+	fmt.Println("Likes: ", post.Likes)
 
 	app.Run(":8082")
+
 }
 
 func setupApp() *gin.Engine {
