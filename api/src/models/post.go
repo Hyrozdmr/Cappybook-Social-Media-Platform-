@@ -2,14 +2,17 @@ package models
 
 import (
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type Post struct {
 	gorm.Model // gorm.Model creates the following common fields automatically; ID (unit / gorm:"primaryKey"), CreatedAt (time.Time), UpdatedAt(time.Time), DeletedAt (gorm.DeletedAt / gorm:"index")
-	// ** WE CAN PROBABLY ADD 'CreatedAt' TO JSONPost TO BE ABLE TO USE IN FRONTEND **
-	Message string `json:"message"`
+  // ** WE CAN PROBABLY ADD 'CreatedAt' TO JSONPost TO BE ABLE TO USE IN FRONTEND **
+	Message   string    `json:"message"`
+	CreatedAt time.Time `json:"created_at"`
+	Likes     int       `json:"likes"`
 }
 
 // This function creates a new record in the database
@@ -21,6 +24,24 @@ func (post *Post) Save() (*Post, error) {
 
 	return post, nil
 }
+
+func (post *Post) Delete() (*Post, error) {
+	err := Database.Delete(post).Error
+	if err != nil {
+		return &Post{}, err
+	}
+	return post, nil
+}
+
+func (post *Post) SaveLike() (*Post, error) {
+	post.Likes++
+	err := Database.Save(post).Error
+	if err != nil {
+		return nil, err
+	}
+	return post, nil
+}
+
 
 // This function retrieves all posts from the database and returns them as a slice
 func FetchAllPosts() (*[]Post, error) {
@@ -34,4 +55,17 @@ func FetchAllPosts() (*[]Post, error) {
 	}
 
 	return &posts, nil // Returns a pointer to the 'posts' slice (if successful)
+}
+
+
+
+func FetchSpecificPost(postID uint64) (*Post, error) {
+	var post Post
+	err := Database.First(&post, postID).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &post, nil
 }

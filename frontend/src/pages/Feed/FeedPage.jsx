@@ -2,41 +2,90 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getPosts } from "../../services/posts";
+import { createPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
 
+import "./FeedPage.scss";
+
 export const FeedPage = () => {
-  const [posts, setPosts] = useState([]);
-  const navigate = useNavigate();
+    const [posts, setPosts] = useState([]);
+    const [post, setPost] = useState("");
+    const navigate = useNavigate();
 
-  useEffect(() => {
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            getPosts(token)
+                .then((data) => {
+                    const sortedPosts = data.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    setPosts(sortedPosts);
+                    localStorage.setItem("token", data.token);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    navigate("/login");
+                });
+        }
+    }, [navigate]);
+
     const token = localStorage.getItem("token");
-    if (token) {
-      getPosts(token)
-        .then((data) => {
-          setPosts(data.posts);
-          localStorage.setItem("token", data.token);
-        })
-        .catch((err) => {
-          console.error(err);
-          navigate("/login");
-        });
+    if (!token) {
+        navigate("/login");
+        return;
     }
-  }, [navigate]);
 
-  const token = localStorage.getItem("token");
-  if (!token) {
-    navigate("/login");
-    return;
-  }
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const createdPostResponse = await createPosts(token, post);
+            const updatedPosts = await getPosts(token);
+            const sortedPosts = updatedPosts.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setPosts(sortedPosts);
+            setPost("");
+            localStorage.setItem("token", updatedPosts.token);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
-  return (
-    <>
-      <h2>Posts</h2>
-      <div className="feed" role="feed">
-        {posts.map((post) => (
-          <Post post={post} key={post._id} />
-        ))}
-      </div>
-    </>
-  );
+
+
+
+
+
+
+    const handlePostChange = (event) => {
+        setPost(event.target.value);
+    }
+
+    return (
+        <>
+            <div className="feed-container">
+
+                <h2>Posts</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="feed-create-post">
+                        <input
+                            type="text"
+                            value={post}
+                            onChange={handlePostChange}/>
+                        <input role="submit-button" id="submit" type="submit" value="Submit" />
+                    </div>
+                </form>
+
+                <div className="feed-all-posts" role="feed">
+
+                        {posts.map((post) => (
+                            <div className="feed-post"> <Post post={post} key={post._id} />  </div>
+                        ))}
+
+
+                </div>
+
+
+
+            </div>
+
+        </>
+    );
 };
