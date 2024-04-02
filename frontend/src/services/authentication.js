@@ -40,15 +40,14 @@ export const signup = async (email, password, username, image) => {
     body: formData,
   };
 
-  let response = await fetch(`${BACKEND_URL}/users`, requestOptions);
+  const response = await fetch(`${BACKEND_URL}/users`, requestOptions);
 
-  // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
-  if (response.status === 201) {
-    let data = await response.json();
-    return data.token;
-  } else {
-    throw new Error(
-      `Received status ${response.status} when signing up. Expected 201`
-    );
+  if (!response.ok) {
+    const data = await response.json(); // Parse response JSON
+    throw new Error(data.message); // Throw an Error object with the message from the response
   }
+
+  const data = await response.json();
+  return data.token;
 };
+
