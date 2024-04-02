@@ -9,6 +9,7 @@ import (
 
 type Post struct {
 	gorm.Model // gorm.Model creates the following common fields automatically; ID (unit / gorm:"primaryKey"), CreatedAt (time.Time), UpdatedAt(time.Time), DeletedAt (gorm.DeletedAt / gorm:"index")
+	UserID    string    `json:"user_id"`
   // ** WE CAN PROBABLY ADD 'CreatedAt' TO JSONPost TO BE ABLE TO USE IN FRONTEND **
 	Message   string    `json:"message"`
 	CreatedAt time.Time `json:"created_at"`
@@ -56,8 +57,6 @@ func FetchAllPosts() (*[]Post, error) {
 
 	return &posts, nil // Returns a pointer to the 'posts' slice (if successful)
 }
-
-
 
 func FetchSpecificPost(postID uint64) (*Post, error) {
 	var post Post

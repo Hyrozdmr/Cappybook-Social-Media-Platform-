@@ -15,6 +15,7 @@ type JSONPost struct {
 	Message string `json:"message"`
 	CreatedAt string `json:"created_at"`
 	Likes     int    `json:"likes"`
+	UserID    string `json:"user_id"`
 	// add fields that would be needed here, important to comm
 	// this to FE
 
@@ -42,6 +43,7 @@ func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incomin
 			ID:        post.ID,
 			CreatedAt: post.CreatedAt.Format(time.RFC3339),
 			Likes:     post.Likes,
+			UserID:    post.UserID,
 		})
 	}
 
@@ -68,6 +70,7 @@ func GetSpecificPost(ctx *gin.Context) {
 		ID:        post.ID,
 		CreatedAt: post.CreatedAt.Format(time.RFC3339),
 		Likes:     post.Likes,
+		UserID:    post.UserID,
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost})
@@ -99,7 +102,15 @@ func CreatePost(ctx *gin.Context) {
 	PostTime := time.Now()
 	// formattedTime := PostTime.Format("2006-01-02 15:04:05")
 	LikeCount := 0
+	// getting the user id from the gin context and passing an error
+	// if there is none
+	userID, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR": "USER ID NOT FOUND IN CONTEXT"})
+		return
+	}
 	newPost := models.Post{
+		UserID:    userID.(string), // cast the user ID to a string
 		Message:   requestBody.Message,
 		CreatedAt: PostTime,
 		Likes:     LikeCount,
