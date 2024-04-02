@@ -122,19 +122,11 @@ func CreatePost(ctx *gin.Context) {
 		return
 	}
 
-	val, _ := ctx.Get("userID")
-	userID := val.(string)
-	token, _ := auth.GenerateToken(userID)
+	// val, _ := ctx.Get("userID")
+	// userID := val.(string)
+	// token, _ := auth.GenerateToken(userID)
 
-	// userID = "18"
-	// user, err := models.FindUser(userID)
-	// if err != nil {
-	// 	SendInternalError(ctx, err)
-	// 	return
-	// }
-
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "token": token}) //sends confirmation message back if successfully saved
-	// ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "user": user, "token": token}) //sends confirmation message back if successfully saved
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created"}) //sends confirmation message back if successfully saved
 }
 
 func DeletePost(ctx *gin.Context) {
