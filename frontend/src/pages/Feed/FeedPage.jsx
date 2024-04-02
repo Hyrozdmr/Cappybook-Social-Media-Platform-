@@ -6,12 +6,14 @@ import { createPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
 
 import Comment from "../../components/Comment/Comment";
+import "./FeedPage.scss"
 
 
 
 export const FeedPage = () => {
   const [posts, setPosts] = useState([]);
   const [post, setPost] = useState("");
+  // const [user, setUser] = useState({});
   const navigate = useNavigate();
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -40,6 +42,9 @@ export const FeedPage = () => {
         try {
             const createdPostResponse = await createPosts(token, post);
             const updatedPosts = await getPosts(token);
+            // const user = updatedPosts.user;
+            // console.log(user);
+            // setUser(user);
             const sortedPosts = updatedPosts.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
             setPosts(sortedPosts);
             setPost("");
@@ -48,24 +53,23 @@ export const FeedPage = () => {
             console.error(err);
         }
     }
-
   const handlePostChange = (event) => {
     setPost(event.target.value);
   }
 
   return (
-    <div className="container">
+    <div className="feed-container">
       <h2>Posts</h2>
-      <div className="feed" role="feed">
+      <div className="feed-all-posts" role="feed">
         {posts.map((post) => (
-          <div key={post._id}>
-            <Post post={post} />
+          <div className="feed-post" key={post._id}>
+            <Post post={post}/>
             <Comment post={post} /> {/* Render the Comment component for each post */}
           </div>
         ))}
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="create-post">
+        <div className="feed-create-post">
           <input
             type="text"
             value={post}
