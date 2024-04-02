@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {getComments} from "../../services/comments.js";
 
 const Post = ({ post, onLike }) => {
     const handleLikeClick = () => {
