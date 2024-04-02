@@ -1,4 +1,4 @@
-.container {
+.signup-container {
     font-family: "Open Sans", sans-serif;
     font-size: 13px;
     font-weight: bold;
@@ -10,7 +10,6 @@
     margin: 0;
     justify-content: center; /* Center the containers horizontally */
     align-items: center; /* Center the containers vertically */
-    background-color: #a9eca9;
 }
 
 .left-half {
