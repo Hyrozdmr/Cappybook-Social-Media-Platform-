@@ -4,6 +4,9 @@ import { getPosts, createPosts, updatePostLikes} from "../../services/posts";
 import Post from "../../components/Post/Post";
 import Comment from "../../components/Comment/Comment";
 import { getComments, createComments } from "../../services/comments";
+import "./FeedPage.scss"
+
+
 
 export const FeedPage = () => {
     const [posts, setPosts] = useState([]);
@@ -97,11 +100,11 @@ export const FeedPage = () => {
   };
 
   return (
-    <div className="container">
+    <div className="feed-container">
       <h2>Posts</h2>
-      <div className="feed" role="feed">
+      <div className="feed-all-posts" role="feed">
         {posts.map((post) => (
-          <div key={post._id}>
+          <div className="feed-post" key={post._id}>
             <Post post={post} onLike={handleLike} />
             <Comment post={post} comments={comments.filter((comment) => comment.postId === post._id)} onSubmit={(comment) => handleSubmitComment(post._id, comment)} />
           </div>
