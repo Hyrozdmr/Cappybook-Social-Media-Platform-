@@ -83,7 +83,7 @@ func CreatePost(ctx *gin.Context) {
 	userID := val.(string)
 	token, _ := auth.GenerateToken(userID)
 
-	user := GetUser("1")
+	user := GetUser("18")
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "user": user, "token": token})
 }
