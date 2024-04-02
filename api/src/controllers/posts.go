@@ -82,12 +82,23 @@ func GetSpecificPost(ctx *gin.Context) {
 		return
 	}
 
+	user, err := models.FindUser("18")
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
 	jsonPost := JSONPost{
 		Message:   post.Message,
 		ID:        post.ID,
 		CreatedAt: post.CreatedAt.Format(time.RFC3339),
 		Likes:     post.Likes,
 		// UserID:    post.UserID,
+		User: JSONUser{
+			UserID:   user.ID,
+			Username: user.Username,
+			Image:    user.FileData,
+		},
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost})
