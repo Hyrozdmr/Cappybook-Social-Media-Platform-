@@ -11,8 +11,9 @@ import (
 )
 
 func CreateUser(ctx *gin.Context) {
-	var newUser models.User
-	// err := ctx.ShouldBindJSON(&newUser)
+	var newUser models.User // Creates a variable called newUser with the User struct type User{gorm.Model(id,...), email, password}
+	// err := ctx.ShouldBindJSON(&newUser) // Parses the JSON from the request and attempts to match the fields to the newUser fields
+
 
 	// ERROR HANDLING for ShouldBindJSON below
 
@@ -56,7 +57,7 @@ func CreateUser(ctx *gin.Context) {
 	}
 
 	if newUser.Email == "" || newUser.Password == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Must supply username and password"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Must supply username and password"}) // Returns error if email and password are blank
 		return
 	}
 
@@ -125,7 +126,8 @@ func CreateUser(ctx *gin.Context) {
 	// 	return
 	// }
 
-	_, err = newUser.Save()
+	_, err = newUser.Save() // Adds newUser to database
+
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
@@ -134,7 +136,7 @@ func CreateUser(ctx *gin.Context) {
 	userID := string(newUser.ID)
 	token, _ := auth.GenerateToken(userID)
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "token": token})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "token": token}) //sends confirmation message back if successfully saved
 }
 
 func GetUser(ctx *gin.Context) {
@@ -150,4 +152,5 @@ func GetUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"user": user, "token": token})
+
 }
