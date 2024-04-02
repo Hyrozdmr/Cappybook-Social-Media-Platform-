@@ -4,30 +4,28 @@ import { useNavigate } from "react-router-dom";
 import { getPosts } from "../../services/posts";
 import { createPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
-
 import Comment from "../../components/Comment/Comment";
-import { createComment } from "../../services/posts";
 
-import "./FeedPage.scss";
 
 export const FeedPage = () => {
   const [posts, setPosts] = useState([]);
   const [post, setPost] = useState("");
-  const [comment, setComment] = useState(""); 
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       getPosts(token)
-        .then((data) => {
-          setPosts(data.posts);
-          localStorage.setItem("token", data.token);
-        })
-        .catch((err) => {
-          console.error(err);
-          navigate("/login");
-        });
+          .then((data) => {
+            const sortedPosts = data.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setPosts(sortedPosts);
+            localStorage.setItem("token", data.token);
+          })
+          .catch((err) => {
+            console.error(err);
+            navigate("/login");
+          });
     }
   }, [navigate]);
 
@@ -40,9 +38,10 @@ export const FeedPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await createPosts(token, post);
+      const createdPostResponse = await createPosts(token, post);
       const updatedPosts = await getPosts(token);
-      setPosts(updatedPosts.posts);
+      const sortedPosts = updatedPosts.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      setPosts(sortedPosts);
       setPost("");
       localStorage.setItem("token", updatedPosts.token);
     } catch (err) {
@@ -54,63 +53,28 @@ export const FeedPage = () => {
     setPost(event.target.value);
   }
 
-
-  const handleCommentSubmit = async (postId, userId, event) => {
-    event.preventDefault();
-    try {
-      await createComment(token, postId, userId, comment); // Assuming you have a createComment function
-      const updatedPosts = await getPosts(token);
-      setPosts(updatedPosts.posts);
-      setComment("");
-      localStorage.setItem("token", updatedPosts.token);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleCommentChange = (event) => {
-    setComment(event.target.value);
-  };
-
-
   return (
-    <>
     <div className="container">
-
       <h2>Posts</h2>
       <div className="feed" role="feed">
         {posts.map((post) => (
-          <Post post={post} key={post._id} />
+          <div key={post._id}>
+            <Post post={post} />
+            <Comment post={post} /> {/* Render the Comment component for each post */}
+          </div>
         ))}
       </div>
-
-      <form onSubmit={(event) => handleCommentSubmit(post._id, post.user._id, event)}>
-              <input
-                type="text"
-                value={comment}
-                onChange={handleCommentChange}
-                placeholder="Write a comment..."
-              />
-              <button type="submit">Add Comment</button>
-            </form>
-            {/* Render comments for each post */}
-            {post.comments.map((comment) => (
-              <Comment key={comment._id} comment={comment} />
-            ))}
-          </div>
-    <div>
       <form onSubmit={handleSubmit}>
         <div className="create-post">
           <input
-            type="text" 
-            value={post} 
-            onChange={handlePostChange}/>
+            type="text"
+            value={post}
+            onChange={handlePostChange}
+          />
           <input role="submit-button" id="submit" type="submit" value="Submit" />
         </div>
       </form>
     </div>
-      
-    </>
   );
 };
 
