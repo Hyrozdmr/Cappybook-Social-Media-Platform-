@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -71,17 +72,21 @@ func CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "token": token})
 }
 
-func GetUser(ctx *gin.Context) {
-	// val, _ := ctx.Get("userID")
-	userID := ctx.Param("id") // This is to check response in postman
-	// userID := val.(string)
-	token, _ := auth.GenerateToken(userID)
+// func GetUser(ctx *gin.Context) {
+func GetUser(id string) *models.User {
+	// userID := ctx.Param("id") // This is to check response in postman
 
+	// val, _ := ctx.Get("userID")
+	// userID := val.(string)
+	userID := id //
+	// token, _ := auth.GenerateToken(userID)
 	user, err := models.FindUser(userID)
 	if err != nil {
-		SendInternalError(ctx, err)
-		return
+		// SendInternalError(err)
+		// return
+		fmt.Println(err)
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"user": user, "token": token})
+	// ctx.JSON(http.StatusOK, gin.H{"user": user, "token": token})
+	return user
 }

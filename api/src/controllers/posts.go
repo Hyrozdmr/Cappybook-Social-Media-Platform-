@@ -83,7 +83,9 @@ func CreatePost(ctx *gin.Context) {
 	userID := val.(string)
 	token, _ := auth.GenerateToken(userID)
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "token": token})
+	user := GetUser("1")
+
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "user": user, "token": token})
 }
 
 func UpdatePostLikes(ctx *gin.Context) {
