@@ -24,7 +24,7 @@ func GenerateToken(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userID,
 		"iat": jwt.NewNumericDate(now),
-		"exp": jwt.NewNumericDate(now.Add(time.Minute * 10)),
+		"exp": jwt.NewNumericDate(now.Add(time.Minute * 1)),
 	})
 	// This is then returned and signed into a string of bytes, and into our secret environment variable
 	return token.SignedString([]byte(secret))
@@ -79,6 +79,7 @@ func createAuthTokenFromClaims(claims jwt.MapClaims) (AuthToken, error) {
 	if err != nil {
 		return AuthToken{}, err
 	}
+
 	// Function checks the expiration time, when it was issued, the user id,
 	// using jwt.MapClaims to do so, and returning errors if there are any.
 	// If there are no errors, it will return the AuthToken in the format of the
