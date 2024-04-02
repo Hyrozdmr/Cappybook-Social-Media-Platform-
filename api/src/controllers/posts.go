@@ -11,8 +11,8 @@ import (
 )
 
 type JSONPost struct {
-	ID      uint   `json:"_id"` // Relates to the primary key ID for the posts table
-	Message string `json:"message"`
+	ID        uint   `json:"_id"` // Relates to the primary key ID for the posts table
+	Message   string `json:"message"`
 	CreatedAt string `json:"created_at"`
 	Likes     int    `json:"likes"`
 	// add fields that would be needed here, important to comm
@@ -115,7 +115,12 @@ func CreatePost(ctx *gin.Context) {
 	userID := val.(string)
 	token, _ := auth.GenerateToken(userID)
 
-	user := GetUser("18")
+	userID = "18"
+	user, err := models.FindUser(userID)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "user": user, "token": token}) //sends confirmation message back if successfully saved
 }
