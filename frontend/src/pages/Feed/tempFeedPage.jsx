@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPosts, updatePostLikes } from "../../services/posts";
+
+import { getPosts } from "../../services/posts";
+import { createPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
 import Comment from "../../components/Comment/Comment";
 
@@ -14,9 +16,10 @@ export const FeedPage = () => {
         if (token) {
             getPosts(token)
                 .then((data) => {
-                    const sortedPosts = data.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    const sortedPosts = data.posts.sort(
+                        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+                    );
                     setPosts(sortedPosts);
-                    localStorage.setItem("token", data.token);
                 })
                 .catch((err) => {
                     console.error(err);
@@ -25,18 +28,23 @@ export const FeedPage = () => {
         }
     }, [navigate]);
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-        navigate("/login");
-        return null;
-    }
+    const handleLike = async (postId) => {
+        try {
+            // Send request to backend to update like count for the post with postId
+            console.log(`Like button clicked for post with ID: ${postId}`);
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await createPosts(token, post);
+            const createdPostResponse = await createPosts(token, post);
             const updatedPosts = await getPosts(token);
-            const sortedPosts = updatedPosts.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            const sortedPosts = updatedPosts.posts.sort(
+                (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
             setPosts(sortedPosts);
             setPost("");
             localStorage.setItem("token", updatedPosts.token);
@@ -49,35 +57,23 @@ export const FeedPage = () => {
         setPost(event.target.value);
     };
 
-    const handleLike = async (postId) => {
-        try {
-            await updatePostLikes(token, postId);
-            const updatedPosts = await getPosts(token);
-            const sortedPosts = updatedPosts.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-            setPosts(sortedPosts);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
     return (
         <div className="container">
             <h2>Posts</h2>
             <div className="feed" role="feed">
                 {posts.map((post) => (
                     <div key={post._id}>
-                        <Post post={post} onLike={handleLike} />
+                        <Post post={post} />
+                        {/* Like button */}
+                        <button onClick={() => handleLike(post._id)}>Like</button>
+                        {/* Render the Comment component for each post */}
                         <Comment post={post} />
                     </div>
                 ))}
             </div>
             <form onSubmit={handleSubmit}>
                 <div className="create-post">
-                    <input
-                        type="text"
-                        value={post}
-                        onChange={handlePostChange}
-                    />
+                    <input type="text" value={post} onChange={handlePostChange} />
                     <input role="submit-button" id="submit" type="submit" value="Submit" />
                 </div>
             </form>
