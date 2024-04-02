@@ -60,6 +60,29 @@ func CreateUser(ctx *gin.Context) {
 		return
 	}
 
+	if len(newUser.Password) < 8 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Password must be at least 8 characters"})
+		return
+	}
+
+	var specialCharacters = []string{
+		"!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "{", "}", "[", "]", "|", "\\", ":", ";", "'", "\"", "<", ">", ",", ".", "?", "/",
+	}
+
+	var containsSpecialCharacter = false
+	for _, char := range newUser.Password {
+		for _, specialChar := range specialCharacters {
+			if string(char) == specialChar {
+				containsSpecialCharacter = true
+			}
+		}
+	}
+
+	if containsSpecialCharacter != true {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Password must have at least one special character"})
+		return
+	}
+
 	if newUser.Email[0] == '@' {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid email"})
 		return
