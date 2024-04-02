@@ -11,16 +11,18 @@ import (
 )
 
 type JSONPost struct {
-	ID        uint   `json:"_id"`
-	Message   string `json:"message"`
+	ID      uint   `json:"_id"` // Relates to the primary key ID for the posts table
+	Message string `json:"message"`
 	CreatedAt string `json:"created_at"`
 	Likes     int    `json:"likes"`
 	UserID    string `json:"user_id"`
 	// add fields that would be needed here, important to comm
 	// this to FE
+
 }
 
-func GetAllPosts(ctx *gin.Context) {
+func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incoming HTTP request
+	// FetchAllPosts() returns all posts from the database in a slice
 	posts, err := models.FetchAllPosts()
 
 	if err != nil {
@@ -28,6 +30,7 @@ func GetAllPosts(ctx *gin.Context) {
 		return
 	}
 
+	//Following three lines retrieve the userID in order to generate a new auth token
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
 	token, _ := auth.GenerateToken(userID)
@@ -44,6 +47,7 @@ func GetAllPosts(ctx *gin.Context) {
 		})
 	}
 
+	// Sends a JSON response with a status code of 200 (http.StatusOK) containing the posts and generated token
 	ctx.JSON(http.StatusOK, gin.H{"posts": jsonPosts, "token": token})
 }
 
@@ -73,13 +77,17 @@ func GetSpecificPost(ctx *gin.Context) {
 }
 
 type createPostRequestBody struct {
-	Message   string
+	Message string
+	// ** UNSURE HOW THIS MATCHES TO LOWERCASE "message" JSON FIELD **
 	CreatedAt time.Time
 }
 
 func CreatePost(ctx *gin.Context) {
 	var requestBody createPostRequestBody
 	err := ctx.BindJSON(&requestBody)
+	// ctx.BindJSON reads the JSON payload from the request body (frontend/src/services/posts.js)
+	// it parses the JSON payload and attempts to match the JSON fields with the fields in the requestBody struct
+	// if the JSON payload has a field named "message" it assigns the corresponding value to the Message field of the requestBody
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
@@ -108,13 +116,48 @@ func CreatePost(ctx *gin.Context) {
 		Likes:     LikeCount,
 	}
 
-	_, err = newPost.Save()
+	_, err = newPost.Save() // Adds newPost to database
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created"})
+	val, _ := ctx.Get("userID")
+	userID := val.(string)
+	token, _ := auth.GenerateToken(userID)
+
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "token": token}) //sends confirmation message back if successfully saved
+}
+
+func DeletePost(ctx *gin.Context) {
+	// Get the post ID from the URL path parameter
+	postID, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid post ID"})
+		return
+	}
+
+	// Fetch the post from the database
+	post, err := models.FetchSpecificPost(uint64(postID))
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		return
+	}
+
+	// Check if the post is nil
+	if post == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		return
+	}
+
+	// Delete post from database
+	DeletedPost, err := post.Delete()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete post"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"success": true, "message": "Post deleted successfully", "deleted post": DeletedPost})
 }
 
 func UpdatePostLikes(ctx *gin.Context) {

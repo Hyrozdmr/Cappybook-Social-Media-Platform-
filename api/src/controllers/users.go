@@ -3,6 +3,7 @@ package controllers
 import (
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
@@ -10,8 +11,9 @@ import (
 )
 
 func CreateUser(ctx *gin.Context) {
-	var newUser models.User
-	// err := ctx.ShouldBindJSON(&newUser)
+	var newUser models.User // Creates a variable called newUser with the User struct type User{gorm.Model(id,...), email, password}
+	// err := ctx.ShouldBindJSON(&newUser) // Parses the JSON from the request and attempts to match the fields to the newUser fields
+
 
 	// ERROR HANDLING for ShouldBindJSON below
 
@@ -55,11 +57,77 @@ func CreateUser(ctx *gin.Context) {
 	}
 
 	if newUser.Email == "" || newUser.Password == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Must supply username and password"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Must supply username and password"}) // Returns error if email and password are blank
 		return
 	}
 
-	_, err = newUser.Save()
+	if len(newUser.Password) < 8 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Password must be at least 8 characters"})
+		return
+	}
+
+	var specialCharacters = []string{
+		"!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "{", "}", "[", "]", "|", "\\", ":", ";", "'", "\"", "<", ">", ",", ".", "?", "/",
+	}
+
+	var containsSpecialCharacter = false
+	for _, char := range newUser.Password {
+		for _, specialChar := range specialCharacters {
+			if string(char) == specialChar {
+				containsSpecialCharacter = true
+			}
+		}
+	}
+
+	if containsSpecialCharacter != true {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Password must have at least one special character"})
+		return
+	}
+
+	if newUser.Email[0] == '@' {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid email"})
+		return
+	}
+
+	if !strings.Contains(newUser.Email, "@") {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid email"})
+		return
+	}
+
+	if strings.Count(newUser.Email, "@") > 1 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid email"})
+		return
+	}
+
+	if strings.Contains(newUser.Email, " ") {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid email"})
+		return
+	}
+
+	existingUser, err := models.FindUserByEmail(newUser.Email)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	if existingUser != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Email already exists"})
+		return
+	}
+
+	// existingUser, err := models.FindUserByEmail(newUser.Email)
+	// if err != nil {
+	// 	SendInternalError(ctx, err)
+	// 	return
+	// }
+
+	// if existingUser != nil {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"message": "Email already exists"})
+	// 	return
+	// }
+
+	_, err = newUser.Save() // Adds newUser to database
+
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
@@ -68,7 +136,7 @@ func CreateUser(ctx *gin.Context) {
 	userID := string(newUser.ID)
 	token, _ := auth.GenerateToken(userID)
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "token": token})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "token": token}) //sends confirmation message back if successfully saved
 }
 
 func GetUser(ctx *gin.Context) {
@@ -84,4 +152,5 @@ func GetUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"user": user, "token": token})
+
 }
