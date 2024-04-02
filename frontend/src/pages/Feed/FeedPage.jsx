@@ -5,14 +5,14 @@ import { getPosts } from "../../services/posts";
 import { createPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
 
+import Comment from "../../components/Comment/Comment";
 
-import "./FeedPage.scss";
+
 
 export const FeedPage = () => {
-    const [posts, setPosts] = useState([]);
-    const [post, setPost] = useState("");
-    const navigate = useNavigate();
-
+  const [posts, setPosts] = useState([]);
+  const [post, setPost] = useState("");
+  const navigate = useNavigate();
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -49,37 +49,31 @@ export const FeedPage = () => {
         }
     }
 
-    const handlePostChange = (event) => {
-        setPost(event.target.value);
-    }
-    return (
-        <>
-            <div className="feed-container">
+  const handlePostChange = (event) => {
+    setPost(event.target.value);
+  }
 
-                <h2>Posts</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="feed-create-post">
-                        <input
-                            type="text"
-                            value={post}
-                            onChange={handlePostChange}/>
-                        <input role="submit-button" id="submit" type="submit" value="Submit" />
-                    </div>
-                </form>
-
-                <div className="feed-all-posts" role="feed">
-
-                        {posts.map((post) => (
-                            <div className="feed-post"> <Post post={post} key={post._id} />  </div>
-                        ))}
-
-
-                </div>
-
-
-
-            </div>
-
-        </>
-    );
+  return (
+    <div className="container">
+      <h2>Posts</h2>
+      <div className="feed" role="feed">
+        {posts.map((post) => (
+          <div key={post._id}>
+            <Post post={post} />
+            <Comment post={post} /> {/* Render the Comment component for each post */}
+          </div>
+        ))}
+      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="create-post">
+          <input
+            type="text"
+            value={post}
+            onChange={handlePostChange}
+          />
+          <input role="submit-button" id="submit" type="submit" value="Submit" />
+        </div>
+      </form>
+    </div>
+  );
 };
