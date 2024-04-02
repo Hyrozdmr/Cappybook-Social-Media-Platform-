@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -14,7 +13,6 @@ import (
 func CreateUser(ctx *gin.Context) {
 	var newUser models.User // Creates a variable called newUser with the User struct type User{gorm.Model(id,...), email, password}
 	// err := ctx.ShouldBindJSON(&newUser) // Parses the JSON from the request and attempts to match the fields to the newUser fields
-
 
 	// ERROR HANDLING for ShouldBindJSON below
 
@@ -140,21 +138,20 @@ func CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "token": token}) //sends confirmation message back if successfully saved
 }
 
-// func GetUser(ctx *gin.Context) {
-func GetUser(id string) *models.User {
+func GetUser(ctx *gin.Context) {
 	// userID := ctx.Param("id") // This is to check response in postman
 
+	// The below two lines of code are to extract userID from token when that functionality becomes possible
 	// val, _ := ctx.Get("userID")
 	// userID := val.(string)
-	userID := id //
-	// token, _ := auth.GenerateToken(userID)
+
+	userID := "18" // hardcoded for frontend testing until userID can be extracted from token
+	token, _ := auth.GenerateToken(userID)
 	user, err := models.FindUser(userID)
 	if err != nil {
-		// SendInternalError(err)
-		// return
-		fmt.Println(err)
+		SendInternalError(ctx, err)
+		return
 	}
 
-	// ctx.JSON(http.StatusOK, gin.H{"user": user, "token": token})
-	return user
+	ctx.JSON(http.StatusOK, gin.H{"user": user, "token": token})
 }
