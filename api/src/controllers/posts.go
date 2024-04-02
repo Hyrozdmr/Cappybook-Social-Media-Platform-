@@ -44,7 +44,7 @@ func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incomin
 	// Convert posts to JSON Structs
 	jsonPosts := make([]JSONPost, 0)
 	for _, post := range *posts {
-		user, err := models.FindUser("18")
+		user, err := models.FindUser("28")
 		if err != nil {
 			SendInternalError(ctx, err)
 			return
@@ -59,7 +59,7 @@ func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incomin
 			User: JSONUser{
 				UserID:   user.ID,
 				Username: user.Username,
-				Image:    user.FileData,
+				// Image:    user.FileData,
 			},
 		})
 	}
