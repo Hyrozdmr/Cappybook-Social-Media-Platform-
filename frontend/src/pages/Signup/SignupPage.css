@@ -1,10 +1,16 @@
 .container {
+    font-family: "Open Sans", sans-serif;
+    font-size: 13px;
+    font-weight: bold;
     display: flex;
     min-width: 1000px;
     width: 100%;
     overflow-x: hidden;
     height: 100vh;
     margin: 0;
+    justify-content: center; /* Center the containers horizontally */
+    align-items: center; /* Center the containers vertically */
+    background-color: #a9eca9;
 }
 
 .left-half {
@@ -18,9 +24,10 @@
 
 .signup-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 72vh;
+    flex-direction: column; /* Change flex-direction to column */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    height: 100vh; /* Use 100vh to make the container fill the entire viewport height */
 }
 
 .signup-form {
@@ -33,25 +40,34 @@
 }
 
 .signup-form h1 {
+    height: auto;
+    font-family: "Open Sans", sans-serif;
     text-align: center;
-    margin-top: 20px;
-    margin-bottom: 20px; /* Reduce margin to decrease space */
-    color: #333; /* Text color */
+    margin-top: 10px;
+    margin-bottom: 0px; /* Reduce margin to decrease space */
+    color: black; /* Text color */
 }
 
-signup-form h2 {
+.signup-form h2 {
+    font-family: "Open Sans", sans-serif;
     text-align: center;
-    margin-bottom: 10px;
+    margin-block: 10px;
+    margin-inline: 10px;
     color: #333; /* Text color */
 }
 
 .signup-form label {
+    font-family: "Open Sans", sans-serif;
+    font-size: 13px;
     display: block;
     margin-bottom: 5px;
 }
 
 .signup-form input[type="text"],
-.signup-form input[type="password"] {
+.signup-form input[type="password"]{
+    font-family: "Open Sans", sans-serif;
+    font-weight: normal;
+    font-size: 17px;
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -59,11 +75,43 @@ signup-form h2 {
     border: 1px solid #ccc; /* Border color */
     border-radius: 5px;
 }
-
-.signup-form input[type="submit"] {
+.file-upload-label {
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    font-size: 20px;
     width: 60%;
     padding: 10px;
-    margin-top: 10px;
+    margin: 10px auto 0;
+    background-color: #3acbea;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+}
+
+.file-upload-input {
+    display: none;
+}
+
+.file-upload-label:hover {
+    background-color: #31a7c0;
+}
+
+.file-name {
+    margin-top: 5px; /* Adjust as needed */
+    color: #f1dec2;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+.signup-form input[type="submit"] {
+    font-weight: bold;
+    width: 60%;
+    padding: 10px;
+    margin: 10px auto 0 77px;
     background-color: #aaecaa;
     color: #ffffff;
     border: none;
@@ -91,29 +139,71 @@ signup-form h2 {
     font-size: 1.5em;
     line-height: 1.5;
     margin-bottom: 20px;
-    color: #ffffff;
+    background-colorcolor: #a9eca9;
+    height: 100%;
 }
 
-.login {
-    width: 60%;
-    padding: 15px;
-    margin: 20px auto;
-    text-align: center;
-    color: #ffffff;
-    border-radius: 20px;
+.signup-login-container {
+    width: 50%; /* Adjust the width as needed */
+    padding: 20px;
+    background-color: #a9eca9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center vertically and horizontally */
+    height: 25vh; /* Use 100vh to make the container fill the entire viewport height */
+}
+
+.signup-login-container h3 {
+    font-family: "Open Sans", sans-serif;
     font-size: 1.5em;
-    background-color: #646cff;
+    color: White;
+    margin-bottom: 10px;
+    margin-inline: 0;
+    margin-block: 0;
+    height: 45px;
 }
 
-.login:hover {
-    color: #aaecaa;
+.signup-login-container p {
+    font-family: "Open Sans", sans-serif;
+    font-size: 1em;
+    color: white;
+    margin-bottom: 0;
+    margin-top: 10px;
+    margin-block: 0;
+    margin-inline: 0;
+    height: 50px;
 }
+
+.signup-login-container .login {
+    font-family: "Open Sans", sans-serif;
+    font-size: 1.2em;
+    color: #ffffff;
+    padding: 10px 20px;
+    background-color: #646cff;
+    border-radius: 20px;
+    text-decoration: none;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.signup-login-container .login:hover {
+    background-color: #aaecaa;
+    color: #ffffff;
+}
+
 
 .error-container {
     display: flex;
     justify-content: center;
-}
+    margin-top: 10px;
+    text-align: center; /* Align the error message center horizontally */
+    }
 
 .error-message {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 550 ;
     color: red;
 }
