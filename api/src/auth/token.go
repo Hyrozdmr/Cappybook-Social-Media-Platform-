@@ -79,6 +79,7 @@ func createAuthTokenFromClaims(claims jwt.MapClaims) (AuthToken, error) {
 	if err != nil {
 		return AuthToken{}, err
 	}
+
 	// Function checks the expiration time, when it was issued, the user id,
 	// using jwt.MapClaims to do so, and returning errors if there are any.
 	// If there are no errors, it will return the AuthToken in the format of the
