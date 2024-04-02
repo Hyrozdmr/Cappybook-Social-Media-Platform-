@@ -23,6 +23,14 @@ func (post *Post) Save() (*Post, error) {
 	return post, nil
 }
 
+func (post *Post) Delete() (*Post, error) {
+	err := Database.Delete(post).Error
+	if err != nil {
+		return &Post{}, err
+	}
+	return post, nil
+}
+
 func (post *Post) SaveLike() (*Post, error) {
 	post.Likes++
 	err := Database.Save(post).Error
