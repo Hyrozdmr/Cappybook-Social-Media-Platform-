@@ -50,6 +50,7 @@ export const SignupPage = () => {
           <div className="signup-container">
             <form className="signup-form" onSubmit={handleSubmit}>
               <h1>Sign Up</h1>
+              <h3> already have an account? <Link to="/login" style={{ color: 'blue' }}>login here</Link></h3>
               <h2>Create your account</h2>
               <input
                   id="email"
@@ -94,13 +95,6 @@ export const SignupPage = () => {
             <div className="error-container">
               {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
-          </div>
-        </div>
-        <div className="right-half">
-          <div className="signup-login-container"> {/* New container for the login section */}
-            <h3>Login Here</h3>
-            <p>Got an account? login here:</p>
-            <Link className="login" to="/login">Login</Link>
           </div>
         </div>
       </div>

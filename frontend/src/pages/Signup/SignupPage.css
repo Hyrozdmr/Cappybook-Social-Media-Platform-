@@ -13,7 +13,7 @@
 }
 
 .left-half {
-    width: 80%;
+    width: 100%;
     padding: 20px;
     background-color: #f0f0f0;
     display: flex;
@@ -43,8 +43,18 @@
     font-family: "Open Sans", sans-serif;
     text-align: center;
     margin-top: 10px;
-    margin-bottom: 0px; /* Reduce margin to decrease space */
+    margin-bottom: 0; /* Reduce margin to decrease space */
     color: black; /* Text color */
+}
+
+.signup-form h3 {
+    height: auto;
+    font-family: "Open Sans", sans-serif;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: black;
 }
 
 .signup-form h2 {
@@ -122,24 +132,6 @@
 .signup-form input[type="submit"]:hover {
     background-color: #8fd98f;
     color: #ffffff;
-}
-
-.right-half {
-    width: 30%;
-    padding: 20px;
-    background-color: #aaecaa;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.right-half p {
-    text-align: center;
-    font-size: 1.5em;
-    line-height: 1.5;
-    margin-bottom: 20px;
-    background-colorcolor: #a9eca9;
-    height: 100%;
 }
 
 .signup-login-container {
