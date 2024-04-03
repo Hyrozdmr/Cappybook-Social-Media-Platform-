@@ -48,23 +48,32 @@ func GetAllPosts(ctx *gin.Context) {
 
 	var jsonPosts []JSONPost
 	for _, post := range *posts {
-		user, _ := models.FindUser(post.UserID)
-		// if err != nil {
-		// SendInternalError(ctx, err)
-		// }
+		if post.UserID == "" {
+			jsonPosts = append(jsonPosts, JSONPost{
+				Message:   post.Message,
+				ID:        post.ID,
+				CreatedAt: post.CreatedAt.Format(time.RFC3339),
+				Likes:     post.Likes,
+			})
+		} else {
+			user, err := models.FindUser(post.UserID)
+			if err != nil {
+				user.ID = 0
+				user.Username = ""
+			}
 
-		jsonPosts = append(jsonPosts, JSONPost{
-			Message:   post.Message,
-			ID:        post.ID,
-			CreatedAt: post.CreatedAt.Format(time.RFC3339),
-			Likes:     post.Likes,
-			User: JSONUser{
-				UserID:   user.ID,
-				Username: user.Username,
-				// Image:    user.FileData,
-			},
-		})
-
+			jsonPosts = append(jsonPosts, JSONPost{
+				Message:   post.Message,
+				ID:        post.ID,
+				CreatedAt: post.CreatedAt.Format(time.RFC3339),
+				Likes:     post.Likes,
+				User: JSONUser{
+					UserID:   user.ID,
+					Username: user.Username,
+					// Image:    user.FileData,
+				},
+			})
+		}
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"posts": jsonPosts, "token": token})
