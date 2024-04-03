@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -25,7 +24,7 @@ type JSONPost struct {
 type JSONUser struct {
 	UserID   uint   `json:"user_id"`
 	Username string `json:"username"`
-	Image    []byte `json:"image"`
+	// Image    []byte `json:"image"`
 }
 
 func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incoming HTTP request
@@ -59,7 +58,7 @@ func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incomin
 			User: JSONUser{
 				UserID:   user.ID,
 				Username: user.Username,
-				Image:    user.FileData,
+				// Image:    user.FileData,
 			},
 		})
 	}
@@ -94,7 +93,8 @@ func GetSpecificPost(ctx *gin.Context) {
 		CreatedAt: post.CreatedAt.Format(time.RFC3339),
 		Likes:     post.Likes,
 		User: JSONUser{
-			UserID: user.ID,
+			UserID:   user.ID,
+			Username: user.Username,
 		},
 	}
 
@@ -135,33 +135,8 @@ func CreatePost(ctx *gin.Context) {
 		return
 	}
 	userIDString := userIDToken.(string)
-	// if len(userIDString) < 3 {
-	// 	// Handle the case when the user ID string is too short
-	// 	ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR string to short": userIDString})
-	// 	return
-	// }
-
-	// Start from the third character of the user ID string
-	// userIDString = userIDString[2:]
-
-	// Remove any non-hexadecimal characters from the user ID string
-	// validHexString := strings.Map(func(r rune) rune {
-	// 	if (r >= '0' && r <= '9') || (r >= 'a' && r <= 'f') || (r >= 'A' && r <= 'F') {
-	// 		return r
-	// 	}
-	// 	return -1
-	// }, userIDString)
-
-	// userIDByte, err := hex.DecodeString(validHexString)
-	// if err != nil {
-	// 	ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR DECODING USER ID STRING FROM TOKEN": validHexString})
-	// 	return
-	// }
-
-	// userID := int64(binary.BigEndian.Uint64(userIDByte))
 	newPost := models.Post{
-		// UserID: string(userIDByte), // cast the user ID to a string
-		UserID:    strconv.Itoa(int([]byte(userIDString)[0])),
+		UserID:    strconv.Itoa(int([]byte(userIDString)[0])), //userID extracted from token via ctx, as a string, but actually represents a byte and therefore needs to be converted to a bytes slice where we extract the first item and convert to a integer then a string
 		Message:   requestBody.Message,
 		CreatedAt: PostTime,
 		Likes:     LikeCount,
@@ -172,16 +147,6 @@ func CreatePost(ctx *gin.Context) {
 		SendInternalError(ctx, err)
 		return
 	}
-
-	for i, b := range []byte(userIDString) {
-		fmt.Printf("Byte %d: %d (0x%x)\n", i, b, b)
-	}
-
-	// val, _ := ctx.Get("userID")
-	// userID := val.(string)
-	// token, _ := auth.GenerateToken(userID)
-
-	// userid, _ := utf8.DecodeRune(userIDByte)
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "userID": newPost.UserID}) //sends confirmation message back if successfully saved
 }

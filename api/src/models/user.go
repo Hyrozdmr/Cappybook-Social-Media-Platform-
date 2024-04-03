@@ -57,12 +57,3 @@ func FindUserByEmail(email string) (*User, error) {
 
 	return &user, nil
 }
-
-func FindUserByBytes(userID []byte) (*User, error) {
-	var user User
-	err := Database.Where("id = ?", userID).First(&user).Error
-	if err != nil {
-		return nil, err
-	}
-	return &user, nil
-}
