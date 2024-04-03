@@ -48,6 +48,8 @@ func CreateToken(ctx *gin.Context) {
 		SendInternalError(ctx, err)
 		return
 	}
+
+	ctx.Set("userID", string(user.ID))
 	// The last line communicates this to the frontend and verifies that it's ok
 	ctx.JSON(http.StatusCreated, gin.H{"token": token, "message": "OK"})
 }

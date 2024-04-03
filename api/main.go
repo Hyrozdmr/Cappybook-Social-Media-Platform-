@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/env"
@@ -20,12 +17,13 @@ func main() {
 	models.AutoMigrateModels()
 
 	// Create a test testPost. Delete these lines when you are creating posts of your own.
-	testPost := models.Post{
-		Message: fmt.Sprintf("This is a test message created at %v!", time.Now()),
-	}
-	testPost.Save()
+	// testPost := models.Post{
+	// 	Message: fmt.Sprintf("This is a test message created at %v!", time.Now()),
+	// }
+	// testPost.Save()
 
 	app.Run(":8082")
+
 }
 
 func setupApp() *gin.Engine {

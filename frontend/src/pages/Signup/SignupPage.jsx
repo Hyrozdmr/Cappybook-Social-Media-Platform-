@@ -96,7 +96,6 @@ export const SignupPage = () => {
               {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
           </div>
-        {/*</div>*/}
       </div>
   );
 };
