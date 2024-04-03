@@ -1,8 +1,7 @@
 package models
 
 import (
-    "fmt"
-    "time"
+	"time"
 
     "gorm.io/gorm"
 )
@@ -14,10 +13,10 @@ type Post struct {
     Message   string    `json:"message"`
     CreatedAt time.Time `json:"created_at"`
     Likes     int       `json:"likes"`
-    Filename  *string `json:"image_filename,omitempty"`
-    FileSize  *int64  `json:"image_filesize,omitempty"`
-    FileType  *string `json:"image_filetype,omitempty"`
-    FileData  *[]byte `json:"image_filedata,omitempty"`
+//     Filename  *string `json:"image_filename,omitempty"`
+//     FileSize  *int64  `json:"image_filesize,omitempty"`
+//     FileType  *string `json:"image_filetype,omitempty"`
+//     FileData  *[]byte `json:"image_filedata,omitempty"`
 }
 
 // This function creates a new record in the database
@@ -47,13 +46,13 @@ func (post *Post) SaveLike() (*Post, error) {
     return post, nil
 }
 
-
 // This function retrieves all posts from the database and returns them as a slice
 func FetchAllPosts() (*[]Post, error) {
     var posts []Post
     err := Database.Find(&posts).Error // Database.Find(&posts) fetches all records from the database and adds them to the 'posts' slice
 
-    fmt.Println(posts) // Prints out the slice (likely used for debugging)
+
+	// fmt.Println(posts) // Prints out the slice (likely used for debugging)
 
     if err != nil {
         return &[]Post{}, err // Returns a pointer to an empty slice of Post structs and the error (if error)
