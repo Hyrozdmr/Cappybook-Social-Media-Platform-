@@ -31,35 +31,29 @@ export const LoginPage = () => {
 
   return (
       <div className="container">
-        <div className="left-half">
           <div className="login-container">
+            <h1> Welcome back to acebook!</h1>
             <form className="login-form" onSubmit={handleSubmit}>
-              <h1>Login</h1>
-              <h2>Already got an account?</h2>
+              <h1>Login to your account</h1>
+              <h2>new here? <Link to="/signup" style={{ color: 'royalblue' }}>signup</Link></h2>
               {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-                <label htmlFor="email">Email:</label>
                 <input
                   id="email"
                   type="text"
                   value={email}
                   onChange={handleEmailChange}
+                  placeholder="Email 📩"
                 />
-                <label htmlFor="password">Password:</label>
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={handlePasswordChange}
+                  placeholder="Password 🔒"
                 />
-                <input role="submit-button" id="submit" type="submit" value="Submit" />
+                <input role="submit-button" id="submit" type="submit" value="Login 🚀" />
             </form>
           </div>
-        </div>
-        <div className="right-half">
-          <h3>New Here?</h3>
-          <p>Sign up and start sharing moments with your friends today! Join our community and explore endless possibilities together.</p>
-          <Link className="signup" to="/signup">Sign Up</Link>
-        </div>
       </div>
   );
 };
