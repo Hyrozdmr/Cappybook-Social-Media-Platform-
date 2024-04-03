@@ -9,7 +9,7 @@ export const SignupPage = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [image, setImage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false); // State for success message
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -17,16 +17,14 @@ export const SignupPage = () => {
     try {
       const token = await signup(email, password, username, image);
       localStorage.setItem("token", token);
-      setIsSuccess(true);
       setTimeout(() => {
         navigate("/posts");
       }, 1000);
-
     } catch (err) {
-      console.error(err);
-      navigate("/signup");
+      setErrorMessage(err.message); // Set error message state with the message from the backend
     }
   };
+
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -66,18 +64,18 @@ export const SignupPage = () => {
                   onChange={handlePasswordChange}
                   placeholder="Password"
               />
-              <input 
-                id="username"
-                type="text"
-                value={username}
-                onChange={handleUsernameChange}
-                placeholder="Username"
-                />
               <input
-                id="image"
-                type="file" 
-                onChange={handleImageChange}
-                />
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  placeholder="Username"
+              />
+              <input
+                  id="image"
+                  type="file"
+                  onChange={handleImageChange}
+              />
               <input
                   role="submit-button"
                   id="submit"
@@ -85,8 +83,10 @@ export const SignupPage = () => {
                   value="Submit"
               />
             </form>
+            <div className="error-container">
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
+            </div>
           </div>
-          {isSuccess && <p>Account created successfully!</p>}
         </div>
         <div className="right-half">
           <h3>Login Here</h3>

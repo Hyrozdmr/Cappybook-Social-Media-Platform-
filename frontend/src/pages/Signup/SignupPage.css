@@ -108,3 +108,12 @@ signup-form h2 {
 .login:hover {
     color: #aaecaa;
 }
+
+.error-container {
+    display: flex;
+    justify-content: center;
+}
+
+.error-message {
+    color: red;
+}
