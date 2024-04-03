@@ -21,6 +21,16 @@ type JSONPost struct {
 	FileType  *string `json:"image_filetype,omitempty"`
 	FileData  *[]byte `json:"image_filedata,omitempty"`
   UserID    string `json:"user_id"`
+	// UserID    string
+	User JSONUser
+	// add fields that would be needed here, important to comm
+	// this to FE
+}
+
+type JSONUser struct {
+	UserID   uint   `json:"user_id"`
+	Username string `json:"username"`
+	Image    []byte `json:"image"`
 }
 
 func GetAllPosts(ctx *gin.Context) {
@@ -44,6 +54,12 @@ func GetAllPosts(ctx *gin.Context) {
 
 	var jsonPosts []JSONPost
 	for _, post := range *posts {
+		user, err := models.FindUser("28")
+		if err != nil {
+			SendInternalError(ctx, err)
+			return
+		}
+
 		var Filename *string
 		var FileSize *int64
 		var FileType *string
@@ -61,7 +77,12 @@ func GetAllPosts(ctx *gin.Context) {
 			ID:        post.ID,
 			CreatedAt: post.CreatedAt.Format(time.RFC3339),
 			Likes:     post.Likes,
-      UserID:    post.UserID,
+      // UserID:    post.UserID,
+			User: JSONUser{
+				UserID:   user.ID,
+				Username: user.Username,
+				// Image:    user.FileData,
+			},
 			Filename:  Filename,
 			FileSize:  FileSize,
 			FileType:  FileType,
@@ -88,6 +109,12 @@ func GetSpecificPost(ctx *gin.Context) {
 		return
 	}
 
+	user, err := models.FindUser("18")
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
 	jsonPost := JSONPost{
 		Message:   post.Message,
 		ID:        post.ID,
@@ -97,7 +124,12 @@ func GetSpecificPost(ctx *gin.Context) {
 		FileSize:  post.FileSize,
 		FileType:  post.FileType,
 		FileData:  post.FileData,
-		UserID:    post.UserID,
+		// UserID:    post.UserID,
+		User: JSONUser{
+			UserID:   user.ID,
+			Username: user.Username,
+			Image:    user.FileData,
+		},
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost})
