@@ -46,12 +46,12 @@ export const SignupPage = () => {
 
   return (
       <div className="container">
-        <div className="left-half">
           <div className="signup-container">
+            <h1> Welcome to Acebook!</h1>
             <form className="signup-form" onSubmit={handleSubmit}>
-              <h1>Sign Up</h1>
-              <h3> already have an account? <Link to="/login" style={{ color: 'blue' }}>login here</Link></h3>
-              <h2>Create your account</h2>
+              <h1>Create your account</h1>
+              <h3> already have an account? <Link to="/login" style={{ color: 'royalblue' }}>login here</Link></h3>
+              {/*<h2>Create your account</h2>*/}
               <input
                   id="email"
                   type="text"
@@ -96,7 +96,7 @@ export const SignupPage = () => {
               {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
           </div>
-        </div>
+        {/*</div>*/}
       </div>
   );
 };
