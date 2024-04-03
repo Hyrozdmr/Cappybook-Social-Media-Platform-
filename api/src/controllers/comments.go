@@ -42,20 +42,20 @@ func CreateComment(ctx *gin.Context) {
 		return
 	}
 
-	PostTime := time.Now()
+	CommentTime := time.Now()
 
 	userIDToken, exists := ctx.Get("userID")
 	if !exists {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR": "USER ID NOT FOUND IN CONTEXT"})
 		return
 	}
-	// in this function a token is not generated, therefore not returned as part of the JSON
+
 	userIDString := userIDToken.(string)
 
 	newComment := models.Comment{
 		UserID:    strconv.Itoa(int([]byte(userIDString)[0])),
 		Message:   requestBody.Message,
-		CreatedAt: PostTime,
+		CreatedAt: CommentTime,
 		Likes:     0,
 		PostId:    postIdInt,
 	}
@@ -161,4 +161,43 @@ func GetSpecificComment(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"comment": jsonComment})
+}
+
+func DeleteComment(ctx *gin.Context) {
+	postID := ctx.Param("id")
+
+	postIdInt, err := strconv.Atoi(postID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+
+	commentID := ctx.Param("comment_id")
+
+	commentIdInt, err := strconv.Atoi(commentID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+
+	comment, err := models.FetchSpecificComment(postIdInt, commentIdInt)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// Check if the comment is nil
+	if comment == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		return
+	}
+
+	// Delete post from database
+	DeletedComment, err := comment.Delete()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete comment"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"success": true, "message": "Comment deleted successfully", "deleted comment": DeletedComment})
 }

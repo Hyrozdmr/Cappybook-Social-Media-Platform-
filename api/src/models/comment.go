@@ -24,6 +24,14 @@ func (comment *Comment) Save() (*Comment, error) {
 	return comment, nil
 }
 
+func (comment *Comment) Delete() (*Comment, error) {
+	err := Database.Delete(comment).Error
+	if err != nil {
+		return nil, err
+	}
+	return comment, nil
+}
+
 // below function is different from posts as fetching all comments for a single post
 // unsure what data type argument should be, was thinking int8 as per table structure
 // but Users FindUserById function uses string instead
