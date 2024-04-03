@@ -48,10 +48,10 @@ func GetAllPosts(ctx *gin.Context) {
 
 	var jsonPosts []JSONPost
 	for _, post := range *posts {
-		user, err := models.FindUser(post.UserID)
-		if err != nil {
-			SendInternalError(ctx, err)
-		}
+		user, _ := models.FindUser(post.UserID)
+		// if err != nil {
+		// SendInternalError(ctx, err)
+		// }
 
 		jsonPosts = append(jsonPosts, JSONPost{
 			Message:   post.Message,
@@ -86,7 +86,7 @@ func GetSpecificPost(ctx *gin.Context) {
 
 	user, err := models.FindUser(post.UserID)
 	if err != nil {
-		SendInternalError(ctx, err)
+		// SendInternalError(ctx, err)
 		return
 	}
 
