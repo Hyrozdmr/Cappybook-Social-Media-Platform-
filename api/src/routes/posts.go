@@ -16,9 +16,9 @@ func setupPostRoutes(baseRouter *gin.RouterGroup) {
 	posts.GET("/:id", middleware.AuthenticationMiddleware, controllers.GetSpecificPost)
 	posts.PUT("/:id/likes", middleware.AuthenticationMiddleware, controllers.UpdatePostLikes)
 	posts.DELETE("/:id/delete", middleware.AuthenticationMiddleware, controllers.DeletePost)
+
+	posts.GET("/:id/comments", middleware.AuthenticationMiddleware, controllers.GetAllCommentsByPostId)
+	posts.POST("/:id/comments", middleware.AuthenticationMiddleware, controllers.CreateComment)
+	posts.GET("/:id/comments/:comment_id", middleware.AuthenticationMiddleware, controllers.GetSpecificComment)
+
 }
-
-// func setupLikePostRoute(baseRouter *gin.RouterGroup) {
-// 	post := baseRouter.Group("/posts/:id/likes")
-
-// }
