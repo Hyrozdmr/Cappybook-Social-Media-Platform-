@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"io"
 	"net/http"
 	"strconv"
 	"time"
@@ -55,7 +54,7 @@ func GetAllPosts(ctx *gin.Context) {
 		}
 
 		jsonPosts = append(jsonPosts, JSONPost{
-      Message:   post.Message,
+			Message:   post.Message,
 			ID:        post.ID,
 			CreatedAt: post.CreatedAt.Format(time.RFC3339),
 			Likes:     post.Likes,
@@ -85,7 +84,6 @@ func GetSpecificPost(ctx *gin.Context) {
 		return
 	}
 
-
 	user, err := models.FindUser(post.UserID)
 	if err != nil {
 		SendInternalError(ctx, err)
@@ -106,58 +104,77 @@ func GetSpecificPost(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost})
 }
 
-func CreatePost(ctx *gin.Context) {
-// 	err := ctx.Request.ParseMultipartForm(10 << 20) // 10 MB maximum file size
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
+type createPostRequestBody struct {
+	Message string
+}
 
-	message := ctx.Request.FormValue("message")
-	if message == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Post message empty"})
+func CreatePost(ctx *gin.Context) {
+	var requestBody createPostRequestBody
+
+	err := ctx.BindJSON(&requestBody)
+	// ctx.BindJSON reads the JSON payload from the request body (frontend/src/services/posts.js)
+	// it parses the JSON payload and attempts to match the JSON fields with the fields in the requestBody struct
+	// if the JSON payload has a field named "message" it assigns the corresponding value to the Message field of the requestBody
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
 
-// 	file, fileHeader, err := ctx.Request.FormFile("image")
-// 	//defer file.Close()
-// 	if err != nil {
-// 		postTime := time.Now()
-// 		likeCount := 0
-// 		newPost := models.Post{
-// 			Message:   message,
-// 			CreatedAt: postTime,
-// 			Likes:     likeCount,
-// 		}
+	if len(requestBody.Message) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Post message empty"})
+		return
+	}
+	// 	err := ctx.Request.ParseMultipartForm(10 << 20) // 10 MB maximum file size
+	// 	if err != nil {
+	// 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// 		return
+	// 	}
 
-// 		_, err = newPost.Save()
-// 		if err != nil {
-// 			SendInternalError(ctx, err)
-// 			return
-// 		}
-// 	}
+	// message := ctx.Request.FormValue("message")
+	// if message == "" {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Post message empty"})
+	// 	return
+	// }
 
-// 	fileData, err := io.ReadAll(file)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read file"})
-// 		return
-// 	}
+	// 	file, fileHeader, err := ctx.Request.FormFile("image")
+	// 	//defer file.Close()
+	// 	if err != nil {
+	// 		postTime := time.Now()
+	// 		likeCount := 0
+	// 		newPost := models.Post{
+	// 			Message:   message,
+	// 			CreatedAt: postTime,
+	// 			Likes:     likeCount,
+	// 		}
 
-// 	fileName := fileHeader.Filename
-// 	fileSize := fileHeader.Size
-// 	fileType := fileHeader.Header.Get("Content-Type")
+	// 		_, err = newPost.Save()
+	// 		if err != nil {
+	// 			SendInternalError(ctx, err)
+	// 			return
+	// 		}
+	// 	}
 
-// 	postTime := time.Now()
-// 	likeCount := 0
-// 	newPost := models.Post{
-//     UserID:    userID.(string), // cast the user ID to a string
-// 		Message:   message,
-// 		CreatedAt: postTime,
-// 		Likes:     likeCount,
-// 		Filename:  &fileName,
-// 		FileSize:  &fileSize,
-// 		FileType:  &fileType,
-// 		FileData:  &fileData,
+	// 	fileData, err := io.ReadAll(file)
+	// 	if err != nil {
+	// 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read file"})
+	// 		return
+	// 	}
+
+	// 	fileName := fileHeader.Filename
+	// 	fileSize := fileHeader.Size
+	// 	fileType := fileHeader.Header.Get("Content-Type")
+
+	// 	postTime := time.Now()
+	// 	likeCount := 0
+	// 	newPost := models.Post{
+	//     UserID:    userID.(string), // cast the user ID to a string
+	// 		Message:   message,
+	// 		CreatedAt: postTime,
+	// 		Likes:     likeCount,
+	// 		Filename:  &fileName,
+	// 		FileSize:  &fileSize,
+	// 		FileType:  &fileType,
+	// 		FileData:  &fileData,
 
 	PostTime := time.Now()
 	// formattedTime := PostTime.Format("2006-01-02 15:04:05")
@@ -169,12 +186,12 @@ func CreatePost(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR": "USER ID NOT FOUND IN CONTEXT"})
 		return
 	}
-  
+
 	userIDString := userIDToken.(string)
-  
+
 	newPost := models.Post{
 		UserID:    strconv.Itoa(int([]byte(userIDString)[0])), //userID extracted from token via ctx, as a string, but actually represents a byte and therefore needs to be converted to a bytes slice where we extract the first item and convert to a integer then a string
-		Message:   message,
+		Message:   requestBody.Message,
 		CreatedAt: PostTime,
 		Likes:     LikeCount,
 	}
@@ -184,7 +201,6 @@ func CreatePost(ctx *gin.Context) {
 		SendInternalError(ctx, err)
 		return
 	}
-
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "userID": newPost.UserID}) //sends confirmation message back if successfully saved
 }
