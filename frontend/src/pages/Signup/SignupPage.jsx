@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./SignupPage.css";
@@ -9,7 +10,7 @@ export const SignupPage = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [image, setImage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false); // State for success message
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -17,16 +18,14 @@ export const SignupPage = () => {
     try {
       const token = await signup(email, password, username, image);
       localStorage.setItem("token", token);
-      setIsSuccess(true);
       setTimeout(() => {
         navigate("/posts");
       }, 1000);
-
     } catch (err) {
-      console.error(err);
-      navigate("/signup");
+      setErrorMessage(err.message); // Set error message state with the message from the backend
     }
   };
+
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -51,47 +50,58 @@ export const SignupPage = () => {
           <div className="signup-container">
             <form className="signup-form" onSubmit={handleSubmit}>
               <h1>Sign Up</h1>
-              <h2>Create Your Account</h2>
+              <h2>Create your account</h2>
               <input
                   id="email"
                   type="text"
                   value={email}
                   onChange={handleEmailChange}
-                  placeholder="Email"
+                  placeholder="Email 📩"
               />
               <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={handlePasswordChange}
-                  placeholder="Password"
+                  placeholder="Password 🔒"
               />
-              <input 
-                id="username"
-                type="text"
-                value={username}
-                onChange={handleUsernameChange}
-                placeholder="Username"
-                />
               <input
-                id="image"
-                type="file" 
-                onChange={handleImageChange}
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  placeholder="Username 💡"
+              />
+              <label htmlFor="image" className="file-upload-label">
+                Upload profile picture 🖼️
+                <input
+                    id="image"
+                    type="file"
+                    onChange={handleImageChange}
+                    className="file-upload-input"
                 />
+                {image && (
+                    <span className="file-name">[{image.name}]</span>
+                    )}
+              </label>
               <input
                   role="submit-button"
                   id="submit"
                   type="submit"
-                  value="Submit"
+                  value="Lets Go! ✅ "
               />
             </form>
+            <div className="error-container">
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
+            </div>
           </div>
-          {isSuccess && <p>Account created successfully!</p>}
         </div>
         <div className="right-half">
-          <h3>Login Here</h3>
-          <p>If you already have an account, login here:</p>
-          <Link className="login" to="/login">Login</Link>
+          <div className="signup-login-container"> {/* New container for the login section */}
+            <h3>Login Here</h3>
+            <p>Got an account? login here:</p>
+            <Link className="login" to="/login">Login</Link>
+          </div>
         </div>
       </div>
   );

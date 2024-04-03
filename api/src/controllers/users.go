@@ -14,7 +14,6 @@ func CreateUser(ctx *gin.Context) {
 	var newUser models.User // Creates a variable called newUser with the User struct type User{gorm.Model(id,...), email, password}
 	// err := ctx.ShouldBindJSON(&newUser) // Parses the JSON from the request and attempts to match the fields to the newUser fields
 
-
 	// ERROR HANDLING for ShouldBindJSON below
 
 	// if err != nil {
@@ -140,11 +139,14 @@ func CreateUser(ctx *gin.Context) {
 }
 
 func GetUser(ctx *gin.Context) {
-	// val, _ := ctx.Get("userID")
-	userID := ctx.Param("id") // This is to check response in postman
-	// userID := val.(string)
-	token, _ := auth.GenerateToken(userID)
+	// userID := ctx.Param("id") // This is to check response in postman
 
+	// The below two lines of code are to extract userID from token when that functionality becomes possible
+	// val, _ := ctx.Get("userID")
+	// userID := val.(string)
+
+	userID := "18" // hardcoded for frontend testing until userID can be extracted from token
+	token, _ := auth.GenerateToken(userID)
 	user, err := models.FindUser(userID)
 	if err != nil {
 		SendInternalError(ctx, err)
@@ -152,5 +154,4 @@ func GetUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"user": user, "token": token})
-
 }

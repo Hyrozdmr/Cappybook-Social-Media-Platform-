@@ -61,3 +61,21 @@ export const updatePostLikes = async (token, postId) => {
   const data = await response.json();
   return data;
 };
+
+
+export const deletePosts = async (token, postId) => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/posts/${postId}/delete`, requestOptions);
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch posts");
+  }
+
+  const data = await response.json();
+  return data;
+};
