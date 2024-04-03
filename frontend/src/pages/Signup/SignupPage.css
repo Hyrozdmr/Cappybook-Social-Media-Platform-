@@ -3,6 +3,7 @@
     font-size: 13px;
     font-weight: bold;
     display: flex;
+    flex-direction: column;
     min-width: 1000px;
     width: 100%;
     overflow-x: hidden;
@@ -10,16 +11,26 @@
     margin: 0;
     justify-content: center; /* Center the containers horizontally */
     align-items: center; /* Center the containers vertically */
+    background-color: #f0f0f0;
 }
 
-.left-half {
-    width: 80%;
-    padding: 20px;
-    background-color: #f0f0f0;
+.signup-container h1 {
+    font-family: "Open Sans", sans-serif;
+    justify-content: center;
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    margin: 50px;
 }
+
+/*.left-half {*/
+/*    width: 100%;*/
+/*    padding: 20px;*/
+/*    background-color: #f0f0f0;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*}*/
 
 .signup-container {
     display: flex;
@@ -43,8 +54,19 @@
     font-family: "Open Sans", sans-serif;
     text-align: center;
     margin-top: 10px;
-    margin-bottom: 0px; /* Reduce margin to decrease space */
+    margin-bottom: 0; /* Reduce margin to decrease space */
     color: black; /* Text color */
+    font-size: 25px;
+}
+
+.signup-form h3 {
+    height: auto;
+    font-family: "Open Sans", sans-serif;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: black;
 }
 
 .signup-form h2 {
@@ -117,29 +139,12 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
+
 }
 
 .signup-form input[type="submit"]:hover {
     background-color: #8fd98f;
     color: #ffffff;
-}
-
-.right-half {
-    width: 30%;
-    padding: 20px;
-    background-color: #aaecaa;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.right-half p {
-    text-align: center;
-    font-size: 1.5em;
-    line-height: 1.5;
-    margin-bottom: 20px;
-    background-colorcolor: #a9eca9;
-    height: 100%;
 }
 
 .signup-login-container {
