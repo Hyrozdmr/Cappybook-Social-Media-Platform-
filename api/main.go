@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/env"
@@ -23,13 +21,6 @@ func main() {
 	// 	Message: fmt.Sprintf("This is a test message created at %v!", time.Now()),
 	// }
 	// testPost.Save()
-
-	post, err := models.FetchSpecificPost(44)
-	fmt.Println("Error: ", err)
-	fmt.Println("UserID: ", post.UserID)
-	fmt.Println("Message: ", post.Message)
-	fmt.Println("CreatedAt: ", post.CreatedAt)
-	fmt.Println("Likes: ", post.Likes)
 
 	app.Run(":8082")
 

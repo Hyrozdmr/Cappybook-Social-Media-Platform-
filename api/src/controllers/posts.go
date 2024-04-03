@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -44,10 +45,10 @@ func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incomin
 	// Convert posts to JSON Structs
 	jsonPosts := make([]JSONPost, 0)
 	for _, post := range *posts {
-		// user, err := models.FindUser(post.UserID)
-		// if err != nil {
-		// 	SendInternalError(ctx, err)
-		// }
+		user, err := models.FindUser(post.UserID)
+		if err != nil {
+			SendInternalError(ctx, err)
+		}
 
 		jsonPosts = append(jsonPosts, JSONPost{
 			Message:   post.Message,
@@ -55,11 +56,11 @@ func GetAllPosts(ctx *gin.Context) { // ctx refers to the context of the incomin
 			CreatedAt: post.CreatedAt.Format(time.RFC3339),
 			Likes:     post.Likes,
 			// UserID:    post.UserID,
-			// User: JSONUser{
-			// 	UserID:   user.ID,
-			// 	Username: user.Username,
-			// 	Image:    user.FileData,
-			// },
+			User: JSONUser{
+				UserID:   user.ID,
+				Username: user.Username,
+				Image:    user.FileData,
+			},
 		})
 	}
 
@@ -81,12 +82,20 @@ func GetSpecificPost(ctx *gin.Context) {
 		return
 	}
 
+	user, err := models.FindUser(post.UserID)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
 	jsonPost := JSONPost{
 		Message:   post.Message,
 		ID:        post.ID,
 		CreatedAt: post.CreatedAt.Format(time.RFC3339),
 		Likes:     post.Likes,
-		// UserID:    post.UserID,
+		User: JSONUser{
+			UserID: user.ID,
+		},
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost})
@@ -120,13 +129,39 @@ func CreatePost(ctx *gin.Context) {
 	LikeCount := 0
 	// getting the user id from the gin context and passing an error
 	// if there is none
-	userID, exists := ctx.Get("userID")
+	userIDToken, exists := ctx.Get("userID")
 	if !exists {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR": "USER ID NOT FOUND IN CONTEXT"})
 		return
 	}
+	userIDString := userIDToken.(string)
+	// if len(userIDString) < 3 {
+	// 	// Handle the case when the user ID string is too short
+	// 	ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR string to short": userIDString})
+	// 	return
+	// }
+
+	// Start from the third character of the user ID string
+	// userIDString = userIDString[2:]
+
+	// Remove any non-hexadecimal characters from the user ID string
+	// validHexString := strings.Map(func(r rune) rune {
+	// 	if (r >= '0' && r <= '9') || (r >= 'a' && r <= 'f') || (r >= 'A' && r <= 'F') {
+	// 		return r
+	// 	}
+	// 	return -1
+	// }, userIDString)
+
+	// userIDByte, err := hex.DecodeString(validHexString)
+	// if err != nil {
+	// 	ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR DECODING USER ID STRING FROM TOKEN": validHexString})
+	// 	return
+	// }
+
+	// userID := int64(binary.BigEndian.Uint64(userIDByte))
 	newPost := models.Post{
-		UserID:    userID.(string), // cast the user ID to a string
+		// UserID: string(userIDByte), // cast the user ID to a string
+		UserID:    strconv.Itoa(int([]byte(userIDString)[0])),
 		Message:   requestBody.Message,
 		CreatedAt: PostTime,
 		Likes:     LikeCount,
@@ -138,9 +173,15 @@ func CreatePost(ctx *gin.Context) {
 		return
 	}
 
+	for i, b := range []byte(userIDString) {
+		fmt.Printf("Byte %d: %d (0x%x)\n", i, b, b)
+	}
+
 	// val, _ := ctx.Get("userID")
 	// userID := val.(string)
 	// token, _ := auth.GenerateToken(userID)
+
+	// userid, _ := utf8.DecodeRune(userIDByte)
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Post created", "userID": newPost.UserID}) //sends confirmation message back if successfully saved
 }
