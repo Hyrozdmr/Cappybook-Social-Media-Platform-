@@ -221,6 +221,19 @@ func DeleteComment(ctx *gin.Context) {
 		return
 	}
 
+	userIDToken, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR": "USER ID NOT FOUND IN CONTEXT"})
+		return
+	}
+
+	userIDString := userIDToken.(string)
+
+	if comment.UserID != strconv.Itoa(int([]byte(userIDString)[0])) {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "User ID can only delete own post"})
+		return
+	}
+
 	// Check if the comment is nil
 	if comment == nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
