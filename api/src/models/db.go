@@ -64,6 +64,7 @@ func OpenDatabaseConnection() {
 func AutoMigrateModels() {
 	Database.AutoMigrate(&User{})
 	Database.AutoMigrate(&Post{})
+	Database.AutoMigrate(&Comment{})
 	// This is the 4th function that runs when main is launched (1st the environment variables
 	// are loaded, 2nd the app is setup and 3rd the database connection is established).
 	// This function is responsible for automatically migrating (creating or updating)
