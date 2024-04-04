@@ -13,6 +13,10 @@ import (
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 )
 
+type fileWrapper struct {
+	*multipart.FileHeader
+}
+
 func uploadFileToHostingService(file multipart.File) (string, error) {
 	client := resty.New()
 
