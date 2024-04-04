@@ -62,9 +62,11 @@ func FindUserByEmail(email string) (*User, error) {
 }
 
 func SeedUserIfNotExist() {
-	var count int64
-	Database.Model(&User{}).Count(&count)
-	if count == 0 {
+	var Usercount int64
+	var Postcount int64
+	Database.Model(&User{}).Count(&Usercount)
+	Database.Model(&Post{}).Count(&Postcount)
+	if Usercount == 0 || Postcount == 0 {
 		user := User{
 			Email:    "capy@bara.com",
 			Password: "capybara!",
