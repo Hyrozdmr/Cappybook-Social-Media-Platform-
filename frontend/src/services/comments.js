@@ -19,9 +19,9 @@ export const getComments = async (postId, token) => {
   return data;
 };
 
-export const createComments = async (postId, token, comment) => {
+export const createComments = async (token, comment, postId) => {
   const commentData = {
-    "text": comment
+    "message": comment
   };
   
   const requestOptions = {

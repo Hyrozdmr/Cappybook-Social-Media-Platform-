@@ -83,7 +83,10 @@ export const FeedPage = () => {
     const handleSubmitComment = async (event, postId) => {
       event.preventDefault();
         try {
-            await createComments(postId, token, comment);
+            console.log("Token:", token);
+            console.log("Comment:", comment);
+            console.log("Post ID:", postId);
+            await createComments(token, comment, postId);
             const updatedComments = await getComments(postId, token);
             const sortedComments = updatedComments.comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
             setComments(sortedComments);
@@ -113,34 +116,38 @@ export const FeedPage = () => {
       setPost(event.target.value);
     };
 
-  return (
-    <div className="feed-container">
-      <h2>Posts</h2>
-      <form onSubmit={handleSubmitPost}>
-        <div className="create-post">
-          <input type="text" value={post} onChange={handlePostChange} />
-          <input role="submit-button" id="submit" type="submit" value="Submit" />
-        </div>
-      </form>
-      <div className="feed-all-posts" role="feed">
-        {posts.map((post) => (
-          <div className="feed-post" key={post._id}>
-            <Post post={post} onDelete={handleDelete} onLike={handleLike} user={post.User.username}/>
-
-            <form onSubmit={handleSubmitComment}>
-                <div className="create-comment">
-                    <input type="text" value={comment} onChange={handleCommentChange} />
-                    <input role="submit-button" id="submit" type="submit" value="Submit" />
-                </div>
-            </form>
-            {comments.map((comment) => (
-              <div className="feed-comment" key={comment._id}>
-              <Comment comment={comment}onDelete={handleDeleteComment}/>
-              </div>
-            ))}
+    return (
+      <div className="feed-container">
+        <h2>Posts</h2>
+        <form onSubmit={handleSubmitPost}>
+          <div className="create-post">
+            <input type="text" value={post} onChange={handlePostChange} />
+            <input role="submit-button" id="submit" type="submit" value="Submit" />
           </div>
-        ))}
+        </form>
+        <div className="feed-all-posts" role="feed">
+          {posts.map((post) => (
+            <div className="feed-post" key={post._id}>
+              <Post post={post} onDelete={handleDelete} onLike={handleLike} user={post.User.username} />
+  
+              <form onSubmit={(e) => handleSubmitComment(e, post._id)}>
+                <div className="create-comment">
+                  <input type="text" value={comment} onChange={handleCommentChange} />
+                  <input role="submit-button" id="submit" type="submit" value="Submit" />
+                </div>
+              </form>
+  
+              {comments
+                .filter((comment) => comment.postId === post._id)
+                .map((comment) => (
+                  <div className="feed-comment" key={comment._id}>
+                    <Comment comment={comment} onDelete={() => handleDeleteComment(post._id, comment._id)} />
+                  </div>
+                ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  )
-};
+    );
+  };
+

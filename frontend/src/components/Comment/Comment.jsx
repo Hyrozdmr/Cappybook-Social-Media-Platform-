@@ -43,7 +43,7 @@
 import image from "/src/static/img/x-button.png";
 import userImage from "/src/static/img/user_image.png";
 
-const Comment= ({comment, post, onDelete, onSubmit, onChange}) => {
+const Comment= ({comment, post, onDelete}) => {
 
     const handleDeleteCommentClick = () => {
         onDelete(comment._id);
@@ -51,12 +51,12 @@ const Comment= ({comment, post, onDelete, onSubmit, onChange}) => {
 
     return (
         <div>
-            <form onSubmit={onSubmit}>
+            {/* <form onSubmit={onSubmit}>
                 <div className="create-comment">
                     <input type="text" value={comment} onChange={onChange} />
                     <input role="submit-button" id="submit" type="submit" value="Submit" />
                 </div>
-            </form>
+            </form> */}
                 <div className="comment-info">
                     <div className="comment-user">
                         <img className="user-image" src={userImage} alt="image" />
@@ -84,8 +84,8 @@ export default Comment;
 //       onSubmit(event);
 //     };
   
-//     const handleDeleteComment = (commentId) => {
-//       onDelete(post._id, commentId);
+//     const handleDeleteComment = (postId, commentId) => {
+//       onDelete(postId, commentId);
 //     };
   
 //     return (
@@ -102,20 +102,20 @@ export default Comment;
 //         </form>
 //         <ul>
 //           {comments.map((comment) => (
-//             <li key={comment.id}>
+//             <li key={`${post._id}-${comment.id}`}>
 //               <div className="comment-info">
 //                 <div className="comment-user">
 //                   <p>{comment.user.username}</p>
 //                 </div>
 //                 <p>{comment.message}</p>
-//                 <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
+//                 <button onClick={() => handleDeleteComment(post._id, comment.id)}>Delete</button>
 //               </div>
 //             </li>
 //           ))}
 //         </ul>
-       
 //       </div>
 //     );
 //   };
   
 //   export default Comment;
+  

@@ -5,6 +5,8 @@ import image from "/src/static/img/x-button.png";
 import userImage from "/src/static/img/user_image.png";
 
 const Post = ({ post, onLike, user, onDelete }) => {
+
+
     const handleLikeClick = () => {
         onLike(post._id); // Passes the post ID to the parent component's like handler
     };
