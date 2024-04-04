@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -13,32 +14,22 @@ import (
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 )
 
-type fileWrapper struct {
-	*multipart.FileHeader
-}
-
-func uploadFileToHostingService(file multipart.File) (string, error) {
+func uploadFileToHostingService(file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
 	client := resty.New()
-
+	api_key := os.Getenv("IMGBB_API_KEY")
 	client.SetFormData(map[string]string{
-		"key": "IMGBB_API_KEY",
+		"key": api_key,
 	})
 
-	// Get the concrete type of the file
-	fileHeader, ok := file.(*multipart.FileHeader)
-	if !ok {
-		return "", fmt.Errorf("failed to get file header")
-	}
-
 	// Open the file using the concrete type
-	src, err := fileHeader.Open()
-	if err != nil {
-		return "", fmt.Errorf("failed to open file: %v", err)
-	}
-	defer src.Close()
+	// src, err := fileHeader.Open()
+	// if err != nil {
+	// 	return "", fmt.Errorf("failed to open file: %v", err)
+	// }
+	// defer src.Close()
 
 	resp, err := client.R().
-		SetFileReader("image", fileHeader.Filename, src).
+		SetFileReader("image", fileHeader.Filename, file).
 		Post("https://api.imgbb.com/1/upload")
 	if err != nil {
 		return "", err
@@ -100,7 +91,7 @@ func CreateUser(ctx *gin.Context) {
 		Email:    ctx.PostForm("email"),
 		Password: ctx.PostForm("password"),
 		Username: ctx.PostForm("username"),
-		PhotoURL: ctx.PostForm("profile_photo"),
+		PhotoURL: ctx.PostForm("image"),
 	}
 
 	if newUser.Email == "" || newUser.Password == "" {
@@ -173,16 +164,17 @@ func CreateUser(ctx *gin.Context) {
 	// 	return
 	// }
 
-	file, _, err := ctx.Request.FormFile("profile_photo")
+	file, fileHeader, err := ctx.Request.FormFile("image")
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Missing profile photo"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Missing image"})
 		return
 	}
 	defer file.Close()
 
 	// Upload the file to Imgbb
-	photoURL, err := uploadFileToHostingService(file)
+	photoURL, err := uploadFileToHostingService(file, fileHeader)
 	if err != nil {
+		fmt.Println(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload photo"})
 		return
 	}
