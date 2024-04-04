@@ -1,14 +1,56 @@
 package controllers
 
 import (
-	"io"
+	"encoding/json"
+	"fmt"
+	"mime/multipart"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-resty/resty/v2"
 	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 )
+
+func uploadFileToHostingService(file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
+	client := resty.New()
+	api_key := os.Getenv("IMGBB_API_KEY")
+	client.SetFormData(map[string]string{
+		"key": api_key,
+	})
+
+	// Open the file using the concrete type
+	// src, err := fileHeader.Open()
+	// if err != nil {
+	// 	return "", fmt.Errorf("failed to open file: %v", err)
+	// }
+	// defer src.Close()
+
+	resp, err := client.R().
+		SetFileReader("image", fileHeader.Filename, file).
+		Post("https://api.imgbb.com/1/upload")
+	if err != nil {
+		return "", err
+	}
+
+	if resp.StatusCode() != 200 {
+		return "", fmt.Errorf("failed to upload image: %s", resp.String())
+	}
+
+	var imgResponse struct {
+		Data struct {
+			URL string `json:"url"`
+		} `json:"data"`
+	}
+	err = json.Unmarshal(resp.Body(), &imgResponse)
+	if err != nil {
+		return "", err
+	}
+
+	return imgResponse.Data.URL, nil
+}
 
 func CreateUser(ctx *gin.Context) {
 	var newUser models.User // Creates a variable called newUser with the User struct type User{gorm.Model(id,...), email, password}
@@ -30,29 +72,26 @@ func CreateUser(ctx *gin.Context) {
 	// The below block reads the image data from the request where
 	// the content-type is set to multipart/form-data (in Headers)
 
-	file, header, err := ctx.Request.FormFile("image")
-	// image is the key in the Postman form-data POST request
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	defer file.Close()
-	// Read file data
-	fileBytes, err := io.ReadAll(file)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	// file, header, err := ctx.Request.FormFile("image")
+	// // image is the key in the Postman form-data POST request
+	// if err != nil {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// 	return
+	// }
+	// defer file.Close()
+	// // Read file data
+	// fileBytes, err := io.ReadAll(file)
+	// if err != nil {
+	// 	ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	return
+	// }
 
 	newUser = models.User{
 		// Update user fields with file information
 		Email:    ctx.PostForm("email"),
 		Password: ctx.PostForm("password"),
 		Username: ctx.PostForm("username"),
-		Filename: header.Filename,
-		FileSize: header.Size,
-		FileType: header.Header.Get("Content-Type"),
-		FileData: fileBytes,
+		PhotoURL: ctx.PostForm("image"),
 	}
 
 	if newUser.Email == "" || newUser.Password == "" {
@@ -124,6 +163,23 @@ func CreateUser(ctx *gin.Context) {
 	// 	ctx.JSON(http.StatusBadRequest, gin.H{"message": "Email already exists"})
 	// 	return
 	// }
+
+	file, fileHeader, err := ctx.Request.FormFile("image")
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Missing image"})
+		return
+	}
+	defer file.Close()
+
+	// Upload the file to Imgbb
+	photoURL, err := uploadFileToHostingService(file, fileHeader)
+	if err != nil {
+		fmt.Println(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload photo"})
+		return
+	}
+
+	newUser.PhotoURL = photoURL
 
 	_, err = newUser.Save() // Adds newUser to database
 
