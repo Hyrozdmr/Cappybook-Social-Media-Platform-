@@ -14,7 +14,7 @@ import (
 func AuthenticationMiddleware(ctx *gin.Context) {
 	tokenString := ctx.GetHeader("Authorization")[7:]
 	// Get token string from Authorization header
-	fmt.Println(tokenString)
+	// fmt.Println(tokenString)
 
 	// Decode and validate token
 	token, err := auth.DecodeToken(tokenString)

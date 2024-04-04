@@ -1,6 +1,9 @@
 package models
 
 import (
+	//"github.com/makersacademy/go-react-acebook-template/api/src/controllers"
+	"strconv"
+
 	"gorm.io/gorm"
 )
 
@@ -56,4 +59,28 @@ func FindUserByEmail(email string) (*User, error) {
 	}
 
 	return &user, nil
+}
+
+func SeedUserIfNotExist() {
+	var Usercount int64
+	var Postcount int64
+	Database.Model(&User{}).Count(&Usercount)
+	Database.Model(&Post{}).Count(&Postcount)
+	if Usercount == 0 || Postcount == 0 {
+		user := User{
+			Email:    "capy@bara.com",
+			Password: "capybara!",
+			Username: "Mr Capybara",
+		}
+		user.Save()
+
+		UserIDString := strconv.Itoa(int(user.ID))
+
+		post := Post{
+			Message: "Welcome to Acebook! What's on your mind? Write your first post here.",
+			UserID:  UserIDString,
+		}
+		post.Save()
+	}
+
 }
