@@ -12,7 +12,7 @@ type User struct {
 	Email      string `json:"email"`
 	Password   string `json:"password"`
 	Username   string `json:"username"`
-	PhotoURL   string `json:"photo_url"`
+	PhotoURL   string `json:"image"`
 }
 
 // This function creates a new record in the database

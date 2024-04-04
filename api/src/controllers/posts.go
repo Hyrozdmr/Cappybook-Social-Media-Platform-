@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -22,7 +21,7 @@ type JSONPost struct {
 type JSONUser struct {
 	UserID   uint   `json:"user_id"`
 	Username string `json:"username"`
-	Image    []byte `json:"image"`
+	PhotoURL string `json:"image"`
 }
 
 func GetAllPosts(ctx *gin.Context) {
@@ -61,18 +60,18 @@ func GetAllPosts(ctx *gin.Context) {
 				user.Username = ""
 			}
 
-			jsonPosts = append(jsonPosts, JSONPost{
-				Message:   post.Message,
-				ID:        post.ID,
-				CreatedAt: post.CreatedAt.Format(time.RFC3339),
-				Likes:     post.Likes,
-				User: JSONUser{
-					UserID:   user.ID,
-					Username: user.Username,
-					// Image:    user.FileData,
-				},
-			})
-		}
+		jsonPosts = append(jsonPosts, JSONPost{
+			Message:   post.Message,
+			ID:        post.ID,
+			CreatedAt: post.CreatedAt.Format(time.RFC3339),
+			Likes:     post.Likes,
+			User: JSONUser{
+				UserID:   user.ID,
+				Username: user.Username,
+				PhotoURL: user.PhotoURL,
+			},
+		})
+
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"posts": jsonPosts, "token": token})
