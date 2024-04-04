@@ -1,12 +1,14 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
+	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 )
 
 type JSONPost struct {
@@ -44,23 +46,33 @@ func GetAllPosts(ctx *gin.Context) {
 
 	var jsonPosts []JSONPost
 	for _, post := range *posts {
-		user, _ := models.FindUser(post.UserID)
-		// if err != nil {
-		// SendInternalError(ctx, err)
-		// }
+		if post.UserID == "" {
+			jsonPosts = append(jsonPosts, JSONPost{
+				Message:   post.Message,
+				ID:        post.ID,
+				CreatedAt: post.CreatedAt.Format(time.RFC3339),
+				Likes:     post.Likes,
+			})
+		} else {
+			user, err := models.FindUser(post.UserID)
+			if err != nil {
+				fmt.Println("FindUser error in GetAllPosts: ", err)
+				user.ID = 0
+				user.Username = ""
+			}
 
-		jsonPosts = append(jsonPosts, JSONPost{
-			Message:   post.Message,
-			ID:        post.ID,
-			CreatedAt: post.CreatedAt.Format(time.RFC3339),
-			Likes:     post.Likes,
-			User: JSONUser{
-				UserID:   user.ID,
-				Username: user.Username,
-				// Image:    user.FileData,
-			},
-		})
-
+			jsonPosts = append(jsonPosts, JSONPost{
+				Message:   post.Message,
+				ID:        post.ID,
+				CreatedAt: post.CreatedAt.Format(time.RFC3339),
+				Likes:     post.Likes,
+				User: JSONUser{
+					UserID:   user.ID,
+					Username: user.Username,
+					// Image:    user.FileData,
+				},
+			})
+		}
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"posts": jsonPosts, "token": token})
@@ -80,21 +92,34 @@ func GetSpecificPost(ctx *gin.Context) {
 		return
 	}
 
-	user, err := models.FindUser(post.UserID)
-	if err != nil {
-		SendInternalError(ctx, err) // this line was commented out on main
-		return
-	}
+	var jsonPost JSONPost
 
-	jsonPost := JSONPost{
-		Message:   post.Message,
-		ID:        post.ID,
-		CreatedAt: post.CreatedAt.Format(time.RFC3339),
-		Likes:     post.Likes,
-		User: JSONUser{
-			UserID:   user.ID,
-			Username: user.Username,
-		},
+	if post.UserID == "" {
+		jsonPost = JSONPost{
+			Message:   post.Message,
+			ID:        post.ID,
+			CreatedAt: post.CreatedAt.Format(time.RFC3339),
+			Likes:     post.Likes,
+		}
+	} else {
+		user, err := models.FindUser(post.UserID)
+		if err != nil {
+			fmt.Println("FindUser error in GetAllPosts: ", err)
+			user.ID = 0
+			user.Username = ""
+		}
+
+		jsonPost = JSONPost{
+			Message:   post.Message,
+			ID:        post.ID,
+			CreatedAt: post.CreatedAt.Format(time.RFC3339),
+			Likes:     post.Likes,
+			User: JSONUser{
+				UserID:   user.ID,
+				Username: user.Username,
+				// Image:    user.FileData,
+			},
+		}
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost})
@@ -158,8 +183,20 @@ func DeletePost(ctx *gin.Context) {
 		return
 	}
 
+	userIDToken, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR": "USER ID NOT FOUND IN CONTEXT"})
+		return
+	}
+
+	userIDString := userIDToken.(string)
 	// Fetch the post from the database
 	post, err := models.FetchSpecificPost(uint64(postID))
+	if post.UserID != strconv.Itoa(int([]byte(userIDString)[0])) {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "User ID can only delete own post"})
+		return
+	}
+
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
 		return
