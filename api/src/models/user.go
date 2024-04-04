@@ -9,10 +9,7 @@ type User struct {
 	Email      string `json:"email"`
 	Password   string `json:"password"`
 	Username   string `json:"username"`
-	Filename   string
-	FileSize   int64
-	FileType   string
-	FileData   []byte
+	PhotoURL   string `json:"photo_url"`
 }
 
 // This function creates a new record in the database
