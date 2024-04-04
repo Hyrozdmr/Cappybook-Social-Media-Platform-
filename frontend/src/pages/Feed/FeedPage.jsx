@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { getPosts, createPosts, updatePostLikes, deletePosts} from "../../services/posts";
 import Post from "../../components/Post/Post";
 import Comment from "../../components/Comment/Comment";
-import { getComments, createComments } from "../../services/comments";
+import { getComments, createComments, deleteComments } from "../../services/comments";
 import "./FeedPage.scss"
 
 export const FeedPage = () => {
     const [posts, setPosts] = useState([]);
     const [post, setPost] = useState("");
     const [comments, setComments] = useState([]);
+    const [comment, setComment] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -79,17 +80,34 @@ export const FeedPage = () => {
       }
     };
 
-    const handleSubmitComment = async (postId, comment) => {
-      try {
-        const CommentResponse = await createComments(token, postId, comment);
-        const updatedComments = await getComments(token);
-        const sortedComments = updatedComments.comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        setComments(sortedComments);
-        localStorage.setItem("token", CommentResponse.token);
-      } catch (err) {
-        console.error(err);
-      }
+    const handleSubmitComment = async (event, postId) => {
+      event.preventDefault();
+        try {
+            await createComments(postId, token, comment);
+            const updatedComments = await getComments(postId, token);
+            const sortedComments = updatedComments.comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setComments(sortedComments);
+            setComment("");
+            localStorage.setItem("token", updatedComments.token);
+        } catch (err) {
+            console.error(err);
+        }
     };
+
+    const handleDeleteComment = async (postId, commentId) => {
+      try {
+          await deleteComments(token, postId, commentId);
+          const updatedComments = await getComments(token);
+            const sortedComments = updatedComments.comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setComments(sortedComments);
+      } catch (err) {
+          console.error(err);
+      }
+  };
+
+    const handleCommentChange = (event) => {
+      setComment(event.target.value);
+  };
 
     const handlePostChange = (event) => {
       setPost(event.target.value);
@@ -108,7 +126,18 @@ export const FeedPage = () => {
         {posts.map((post) => (
           <div className="feed-post" key={post._id}>
             <Post post={post} onDelete={handleDelete} onLike={handleLike} user={post.User.username}/>
-            <Comment post={post} comments={comments.filter((comment) => comment.postId === post._id)} onSubmit={(comment) => handleSubmitComment(post._id, comment)} />
+
+            <form onSubmit={handleSubmitComment}>
+                <div className="create-comment">
+                    <input type="text" value={comment} onChange={handleCommentChange} />
+                    <input role="submit-button" id="submit" type="submit" value="Submit" />
+                </div>
+            </form>
+            {comments.map((comment) => (
+              <div className="feed-comment" key={comment._id}>
+              <Comment comment={comment}onDelete={handleDeleteComment}/>
+              </div>
+            ))}
           </div>
         ))}
       </div>
