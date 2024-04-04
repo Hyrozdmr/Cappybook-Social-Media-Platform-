@@ -7,12 +7,12 @@ import (
 )
 
 type Post struct {
-	gorm.Model      // gorm.Model creates the following common fields automatically; ID (unit / gorm:"primaryKey"), CreatedAt (time.Time), UpdatedAt(time.Time), DeletedAt (gorm.DeletedAt / gorm:"index")
-	UserID     string `json:"user_id"`
+	gorm.Model // gorm.Model creates the following common fields automatically; ID (unit / gorm:"primaryKey"), CreatedAt (time.Time), UpdatedAt(time.Time), DeletedAt (gorm.DeletedAt / gorm:"index")
 	// ** WE CAN PROBABLY ADD 'CreatedAt' TO JSONPost TO BE ABLE TO USE IN FRONTEND **
 	Message   string    `json:"message"`
 	CreatedAt time.Time `json:"created_at"`
 	Likes     int       `json:"likes"`
+	UserID    string    `json:"user_id"`
 	// Filename  *string `json:"image_filename,omitempty"`
 	// FileSize  *int64  `json:"image_filesize,omitempty"`
 	// FileType  *string `json:"image_filetype,omitempty"`

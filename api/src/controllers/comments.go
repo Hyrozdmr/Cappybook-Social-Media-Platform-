@@ -1,12 +1,14 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
+	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 )
 
 type JSONComment struct {
@@ -14,7 +16,9 @@ type JSONComment struct {
 	Message string `json:"message"`
 	Likes   int    `json:"likes"`
 	PostId  int    `json:"post_id"`
-	UserID  string `json:"user_id"`
+	// UserID  string `json:"user_id"`
+	// Username string `json:"username"`
+	User JSONUser
 }
 
 type createCommentRequestBody struct {
@@ -80,12 +84,22 @@ func CreateComment(ctx *gin.Context) {
 	// Convert comments to JSON Structs
 	jsonComments := make([]JSONComment, 0)
 	for _, comment := range *comments {
+		user, err := models.FindUser(comment.UserID)
+		if err != nil {
+			fmt.Println("FindUser error in CreateComment: ", err)
+			user.ID = 0
+			user.Username = ""
+		}
 		jsonComments = append(jsonComments, JSONComment{
 			Message: comment.Message,
 			ID:      comment.ID,
 			Likes:   comment.Likes,
 			PostId:  comment.PostId,
-			UserID:  comment.UserID,
+			User: JSONUser{
+				UserID:   user.ID,
+				Username: user.Username,
+				// Image: user.FileData,
+			},
 		})
 	}
 
@@ -117,12 +131,22 @@ func GetAllCommentsByPostId(ctx *gin.Context) {
 	// Convert comments to JSON Structs
 	jsonComments := make([]JSONComment, 0)
 	for _, comment := range *comments {
+		user, err := models.FindUser(comment.UserID)
+		if err != nil {
+			fmt.Println("FindUser error in CreateComment: ", err)
+			user.ID = 0
+			user.Username = ""
+		}
 		jsonComments = append(jsonComments, JSONComment{
 			Message: comment.Message,
 			ID:      comment.ID,
 			Likes:   comment.Likes,
 			PostId:  comment.PostId,
-			UserID:  comment.UserID,
+			User: JSONUser{
+				UserID:   user.ID,
+				Username: user.Username,
+				// Image: user.FileData,
+			},
 		})
 	}
 
@@ -152,12 +176,23 @@ func GetSpecificComment(ctx *gin.Context) {
 		return
 	}
 
+	user, err := models.FindUser(comment.UserID)
+	if err != nil {
+		fmt.Println("FindUser error in CreateComment: ", err)
+		user.ID = 0
+		user.Username = ""
+	}
+
 	jsonComment := JSONComment{
 		Message: comment.Message,
 		ID:      comment.ID,
 		Likes:   comment.Likes,
 		PostId:  comment.PostId,
-		UserID:  comment.UserID,
+		User: JSONUser{
+			UserID:   user.ID,
+			Username: user.Username,
+			// Image: user.FileData,
+		},
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"comment": jsonComment})
