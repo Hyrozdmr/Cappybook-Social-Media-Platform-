@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -58,6 +59,7 @@ func GetAllPosts(ctx *gin.Context) {
 		} else {
 			user, err := models.FindUser(post.UserID)
 			if err != nil {
+				fmt.Println("FindUser error in GetAllPosts: ", err)
 				user.ID = 0
 				user.Username = ""
 			}
@@ -93,21 +95,34 @@ func GetSpecificPost(ctx *gin.Context) {
 		return
 	}
 
-	user, err := models.FindUser(post.UserID)
-	if err != nil {
-		// SendInternalError(ctx, err)
-		return
-	}
+	var jsonPost JSONPost
 
-	jsonPost := JSONPost{
-		Message:   post.Message,
-		ID:        post.ID,
-		CreatedAt: post.CreatedAt.Format(time.RFC3339),
-		Likes:     post.Likes,
-		User: JSONUser{
-			UserID:   user.ID,
-			Username: user.Username,
-		},
+	if post.UserID == "" {
+		jsonPost = JSONPost{
+			Message:   post.Message,
+			ID:        post.ID,
+			CreatedAt: post.CreatedAt.Format(time.RFC3339),
+			Likes:     post.Likes,
+		}
+	} else {
+		user, err := models.FindUser(post.UserID)
+		if err != nil {
+			fmt.Println("FindUser error in GetAllPosts: ", err)
+			user.ID = 0
+			user.Username = ""
+		}
+
+		jsonPost = JSONPost{
+			Message:   post.Message,
+			ID:        post.ID,
+			CreatedAt: post.CreatedAt.Format(time.RFC3339),
+			Likes:     post.Likes,
+			User: JSONUser{
+				UserID:   user.ID,
+				Username: user.Username,
+				// Image:    user.FileData,
+			},
+		}
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost})
