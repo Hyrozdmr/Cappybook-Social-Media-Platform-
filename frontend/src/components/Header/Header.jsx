@@ -14,6 +14,7 @@ export default function Header({isLoggedIn}) {
       <div className="logo">
         <img src={capybara} alt="logo" />
         <Link to="/">Cappybook</Link>
+        <Link to="/">Cappybook</Link>
       </div>
       <div className="nav-bar">
         {isLoggedIn ? (
@@ -28,7 +29,6 @@ export default function Header({isLoggedIn}) {
           </>
         )}
       </div>
-
     </div>
   );
 }
