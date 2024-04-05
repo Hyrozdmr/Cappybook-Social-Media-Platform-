@@ -34,6 +34,7 @@
     background-color: #f0f0f0;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
 }
 
 .login-form h1 {
@@ -67,9 +68,9 @@
 }
 
 .login-form input[type="submit"] {
-    width: 60%;
-    padding: 10px;
-    margin-top: 10px;
+    width: 200px; /* Adjust button width */
+    padding: 10px 10px 10px 10px;
+    margin: 10px 10px 10px 84px;
     background-color: #aaecaa;
     color: #ffffff;
     border: none;
