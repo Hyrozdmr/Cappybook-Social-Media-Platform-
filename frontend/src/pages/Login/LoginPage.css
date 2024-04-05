@@ -70,7 +70,7 @@
 .login-form input[type="submit"] {
     width: 200px; /* Adjust button width */
     padding: 10px 10px 10px 10px;
-    margin: 10px 10px 10px 84px;
+    margin: 10px 10px 10px 95px;
     background-color: #aaecaa;
     color: #ffffff;
     border: none;
@@ -83,7 +83,6 @@
     background-color: #8fd98f;
     color: #ffffff;
 }
-
 .signup {
     width: 60%;
     padding: 15px;
