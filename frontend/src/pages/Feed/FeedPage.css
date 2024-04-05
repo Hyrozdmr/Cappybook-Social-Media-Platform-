@@ -1,17 +1,18 @@
 /* Feed container */
 .feed-container {
    max-width: 700px;
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Adding a softer border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Adding a small shadow */
    margin: 20px auto;
    padding: 20px;
-   background-color: black; 
+   /*background-color: black; */
    border-radius: 10px;
-   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
  }
  
  /* Heading styles */
  .feed-container h2 {
    margin-bottom: 20px;
-   color: #20bc2d; /* Twitter's primary color */
+   color: #000701; /* Twitter's primary color */
  }
  
  /* Post form styles */
@@ -23,6 +24,7 @@
    border: 1px solid #20bc2d; /* Light border color */
    border-radius: 5px;
    padding: 10px;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
  }
  
  .post-input {
@@ -53,7 +55,7 @@
    border-radius: 10px;
    margin-top: 20px;
    padding: 20px;
-   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Add shadow */
  }
  
  /* Error message styles */
