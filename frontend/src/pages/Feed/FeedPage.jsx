@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPosts, createPosts, updatePostLikes, deletePosts} from "../../services/posts";
 import Post from "../../components/Post/Post";
-import "./FeedPage.scss"
+import "./FeedPage.css"
 
 
 export const FeedPage = () => {
