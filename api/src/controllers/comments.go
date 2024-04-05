@@ -98,7 +98,7 @@ func CreateComment(ctx *gin.Context) {
 			User: JSONUser{
 				UserID:   user.ID,
 				Username: user.Username,
-				// Image: user.FileData,
+				PhotoURL: user.PhotoURL,
 			},
 		})
 	}
