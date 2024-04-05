@@ -1,8 +1,38 @@
 .comment-info {
-  width: 100px;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(243, 247, 250);
+  padding: 10px;
+  border-radius: 5px;
 }
 
-.create-comment {
+.delete-comment {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.delete-comment-button {
+  top: 0;
+}
+
+.delete-button {
+  width: 10px;
+  height: 10px;
+  opacity: 0.6;
+}
+
+.comment-user {
+  display: flex;
+  align-items: center;
+}
+
+.comment-user p{
+  font-size: 13px;
+}
+
+.comment-user-image {
+  height:40px;
+  width: 40px;
+  border-radius: 5px;
 }

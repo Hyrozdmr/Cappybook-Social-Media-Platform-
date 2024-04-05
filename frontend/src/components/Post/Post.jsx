@@ -96,13 +96,17 @@ const Post = ({ post, onLike, user, onDelete, token }) => {
       <div className="comments">
         <form onSubmit={handleSubmitComment}>
             <div className="create-comment">
+              <div className="width">
               <input
-              className="comment-input"
+                className="comment-input"
                 type="text"
                 onChange={handleCommentChange}
                 placeholder="Add a comment..."
               />
-              <button className="comment-submit" type="submit">Submit</button>
+              </div>
+              <div className="submit-width">
+                <input type="submit" className="submit" value={"send"}/>
+              </div>
             </div>
           </form>
 
