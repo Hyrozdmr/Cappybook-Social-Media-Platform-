@@ -2,11 +2,44 @@
   display: flex;
   justify-content: space-between;
   padding: 15px;
+  flex-direction: column;
+  width: 100%;
+}
+
+.post-user-delete{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.post-user {
+  display: flex;
+}
+
+.border {
+  border-bottom: 1px solid rgb(187, 187, 187);
+  opacity: 0.5;
 }
 
 .delete-button {
   width: 14px;
   height: 14px;
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.like-button {
+  width: 20px;
+  height: 20px;
+}
+
+.like-button.clicked {
+  width: 23px; /* Increase width on click */
+  height: 23px; /* Increase height on click */
 }
 
 .user-image {
@@ -15,10 +48,4 @@
   border-radius: 50%;
 }
 
-.post-image {
-  right: 0;
-}
 
-.post-user {
-  display: flex;
-}
