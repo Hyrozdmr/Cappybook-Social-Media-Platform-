@@ -118,6 +118,7 @@ export const FeedPage = () => {
                         <Comment post={post} comments={comments.filter((comment) => comment.postId === post._id)} onSubmit={(comment) => handleSubmitComment(post._id, comment)} />
                     </div>
                 ))}
+
             </div>
             {errorMessage && <p>{errorMessage}</p>}
         </div>
