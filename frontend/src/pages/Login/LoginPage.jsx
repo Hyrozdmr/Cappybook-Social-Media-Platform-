@@ -32,7 +32,7 @@ export const LoginPage = () => {
   return (
       <div className="container">
           <div className="login-container">
-            <h1> Welcome back to acebook!</h1>
+            <h1> Welcome back to Cappybook!</h1>
             <form className="login-form" onSubmit={handleSubmit}>
               <h1>Login to your account</h1>
               <h2>new here? <Link to="/signup" style={{ color: 'royalblue' }}>signup</Link></h2>

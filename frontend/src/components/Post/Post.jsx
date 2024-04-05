@@ -16,8 +16,8 @@ const Post = ({ post, onLike, user, onDelete }) => {
         <div className="post-container" key={post._id}>
             <div className="post-info">
                 <div className="post-user">
-                    <img className="user-image" src={userImage} alt="image" />
-                    <p>{user}</p>
+                    <img className="user-image" src={user.image} alt="image" />
+                    <p>{user.username}</p>
                 </div>
                     
                 <p>{post.message}</p>

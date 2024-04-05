@@ -13,7 +13,7 @@ export default function Header({isLoggedIn}) {
     <div className="header">
       <div className="logo">
         <img src={capybara} alt="logo" />
-        <Link to="/">Acebook</Link>
+        <Link to="/">Cappybook</Link>
       </div>
       <div className="nav-bar">
         {isLoggedIn ? (

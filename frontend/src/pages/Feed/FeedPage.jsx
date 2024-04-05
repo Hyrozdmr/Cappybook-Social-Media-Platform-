@@ -107,7 +107,7 @@ export const FeedPage = () => {
       <div className="feed-all-posts" role="feed">
         {posts.map((post) => (
           <div className="feed-post" key={post._id}>
-            <Post post={post} onDelete={handleDelete} onLike={handleLike} user={post.User.username}/>
+            <Post post={post} onDelete={handleDelete} onLike={handleLike} user={post.User}/>
             <Comment post={post} comments={comments.filter((comment) => comment.postId === post._id)} onSubmit={(comment) => handleSubmitComment(post._id, comment)} />
           </div>
         ))}
@@ -115,3 +115,6 @@ export const FeedPage = () => {
     </div>
   )
 };
+
+
+
