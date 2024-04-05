@@ -1,7 +1,7 @@
 .header {
   color: rgb(0, 0, 0);
   font-size: 25px;
-  background-color:rgb(142, 142, 154);
+  background-color: rgba(142, 142, 154, 0.44);
   height: 60px;
   display: flex;
   align-items: center;

@@ -3,7 +3,7 @@
   font-size: 25px;
   margin-bottom: 0;
   margin-top: auto;
-  background-color:rgb(142, 142, 154);
+  background-color: rgba(142, 142, 154, 0.44);
   height: 40px;
   padding: 10px;
   display: flex;
