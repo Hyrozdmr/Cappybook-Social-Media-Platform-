@@ -68,6 +68,7 @@ func SeedUserIfNotExist() {
 			Email:    "capy@bara.com",
 			Password: "capybara!",
 			Username: "Mr Capybara",
+			PhotoURL: "https://i.ibb.co/bsn7QMT/user-image.png",
 		}
 		user.Save()
 
