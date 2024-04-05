@@ -1,6 +1,9 @@
 package models
 
 import (
+	//"github.com/makersacademy/go-react-acebook-template/api/src/controllers"
+	"strconv"
+
 	"gorm.io/gorm"
 )
 
@@ -9,10 +12,7 @@ type User struct {
 	Email      string `json:"email"`
 	Password   string `json:"password"`
 	Username   string `json:"username"`
-	Filename   string
-	FileSize   int64
-	FileType   string
-	FileData   []byte
+	PhotoURL   string `json:"image"`
 }
 
 // This function creates a new record in the database
@@ -56,4 +56,29 @@ func FindUserByEmail(email string) (*User, error) {
 	}
 
 	return &user, nil
+}
+
+func SeedUserIfNotExist() {
+	var Usercount int64
+	var Postcount int64
+	Database.Model(&User{}).Count(&Usercount)
+	Database.Model(&Post{}).Count(&Postcount)
+	if Usercount == 0 || Postcount == 0 {
+		user := User{
+			Email:    "capy@bara.com",
+			Password: "capybara!",
+			Username: "Mr Capybara",
+			PhotoURL: "https://i.ibb.co/bsn7QMT/user-image.png",
+		}
+		user.Save()
+
+		UserIDString := strconv.Itoa(int(user.ID))
+
+		post := Post{
+			Message: "Welcome to Acebook! What's on your mind? Write your first post here.",
+			UserID:  UserIDString,
+		}
+		post.Save()
+	}
+
 }

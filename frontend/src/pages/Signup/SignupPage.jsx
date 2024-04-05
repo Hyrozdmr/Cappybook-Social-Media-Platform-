@@ -47,7 +47,7 @@ export const SignupPage = () => {
   return (
       <div className="container">
           <div className="signup-container">
-            <h1> Welcome to Acebook!</h1>
+            <h1> Welcome to Cappybook!</h1>
             <form className="signup-form" onSubmit={handleSubmit}>
               <h1>Create your account</h1>
               <h3> already have an account? <Link to="/login" style={{ color: 'royalblue' }}>login here</Link></h3>

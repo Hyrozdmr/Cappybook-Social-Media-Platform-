@@ -1,70 +1,61 @@
 .home {
   display: flex;
+  flex-direction: column; /* Change direction to column */
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
   height: 100vh;
 }
 
-.left-half {
-  width: 80%;
-  padding: 20px;
-  background-color: #f0f0f0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.right-half {
-  width: 30%;
-  padding: 20px;
-  background-color: #aaecaa;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.right-half p {
+.welcome-message {
   text-align: center;
-  font-size: 1.5em;
-  line-height: 1.5;
-  margin-bottom: 20px;
-  color: #ffffff;
+  margin-bottom: 50px;
 }
 
-h1, h3 {
+.signup-section {
   text-align: center;
-  margin-top: 200px;
-  margin-bottom: 80px;
-  font-size: 3.5em;
-  color: #ffffff;
 }
 
-h1 {
-  color: black;
+.signup-section {
+  display: flex; /* Use flexbox */
+  justify-content: space-between; /* Space items evenly */
 }
 
-h2 {
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 100px;
-  font-size: 1.5em;
-  color: black;
+.button-container {
+  display: flex; /* Use flexbox */
+  justify-content: space-between; /* Space items evenly */
 }
 
-.login, .signup {
-  width: 60%;
+.signup, .login {
+  width: 200px; /* Adjust button width */
   padding: 15px;
-  margin: 20px auto; 
   text-align: center;
   color: #ffffff;
   border-radius: 20px;
   font-size: 1.5em;
+  margin: 10px; /* Add margin for spacing */
+  box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
 .login {
-  background-color: #aaecaa;
-  color: black;
+  background-color: #30cc54; /* Set initial background color */
+  color: white; /* Set initial text color */
+  transition: background-color 0.3s ease; /* Add transition effect */
+}
+
+.login:hover {
+  background-color: #259b40; /* Change background color on hover */
+  color: white; /* Ensure text color remains the same on hover */
 }
 
 .signup {
-  background-color: #f9fbfa;
-  color: #aaecaa;
+  background-color: #503bdc; /* Set initial background color */
+  color: white; /* Set initial text color */
+  transition: background-color 0.3s ease; /* Add transition effect */
 }
+
+.signup:hover {
+  background-color: #503bdc; /* Change background color on hover */
+  color: white; /* Ensure text color remains the same on hover */
+}
+
+

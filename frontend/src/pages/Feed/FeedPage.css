@@ -1,0 +1,41 @@
+.feed-container{
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+
+}
+.feed-all-posts{
+
+}
+.feed-post{
+   margin: 5%;
+   border: 1px solid rgba(0, 0, 0, 0.1); /* Adding a softer border */
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adding a small shadow */
+   min-width: 70%;
+   padding: 20px; /* Adding some padding for spacing */
+   display: flex; /* Ensuring like and comment parts are aligned horizontally */
+   justify-content: space-between; /* Ensuring like and comment parts are spaced evenly */
+}
+
+.feed-post button {
+   background-color: #4CAF50; /* Green */
+   border: none;
+   color: white;
+   padding: 10px 20px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 16px;
+   margin: 4px 2px;
+   transition-duration: 0.4s;
+   cursor: pointer;
+   border-radius: 12px;
+}
+
+.like-count {
+   margin-left: 5px; /* Add spacing between the word "Like" and the count */
+   font-size: 14px; /* Adjust font size as needed */
+}
+

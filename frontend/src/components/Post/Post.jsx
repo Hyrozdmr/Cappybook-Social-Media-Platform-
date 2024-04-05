@@ -74,6 +74,7 @@ const Post = ({ post, onLike, user, onDelete, token}) => {
         <div className="post-user">
           <img className="user-image" src={userImage} alt="image" />
           <p>{user}</p>
+
         </div>
 
         <p>{post.message}</p>

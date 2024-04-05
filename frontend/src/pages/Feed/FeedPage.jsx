@@ -4,6 +4,7 @@ import { getPosts, createPosts, updatePostLikes, deletePosts} from "../../servic
 import Post from "../../components/Post/Post";
 import "./FeedPage.scss"
 
+
 export const FeedPage = () => {
     const [posts, setPosts] = useState([]);
     const [post, setPost] = useState("");
