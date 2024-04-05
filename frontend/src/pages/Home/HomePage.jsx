@@ -6,7 +6,7 @@ export const HomePage = () => {
     return (
         <div className="home">
             <div className="welcome-message">
-                <h1>Welcome to Cappybook!</h1>
+                <h1>Welcome to Capybook!</h1>
             </div>
             <div className="signup-section">
                 <div className="button-container">
