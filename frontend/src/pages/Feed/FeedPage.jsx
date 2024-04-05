@@ -77,11 +77,15 @@ export const FeedPage = () => {
     return (
       <div className="feed-container">
         <h2>Posts</h2>
-        <form onSubmit={handleSubmitPost}>
-          <div className="create-post">
-            <input type="text" value={post} onChange={handlePostChange} />
-            <input role="submit-button" id="submit" type="submit" value="Submit" />
-          </div>
+        <form className="post-form" onSubmit={handleSubmitPost}>
+          <input
+            className="post-input"
+            type="text"
+            placeholder="What's on your mind?"
+            value={post}
+            onChange={handlePostChange}
+          />
+            <button className="post-submit" type="submit">Post</button>
         </form>
         <div className="feed-all-posts" role="feed">
           {posts.map((post) => (
