@@ -8,7 +8,7 @@ import { createComments, getComments, deleteComments } from "../../services/comm
 const Post = ({ post, onLike, user, onDelete, token }) => {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
-  const [isClicked, setIsClicked] = useState(false); 
+  const [isClicked, setIsClicked] = useState(false);
 
 
   const handleLikeClick = () => {
@@ -27,14 +27,14 @@ const Post = ({ post, onLike, user, onDelete, token }) => {
     const token = localStorage.getItem("token");
     if (token) {
       getComments(post._id, token)
-        .then((data) => {
-          const sortedPosts = data.comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          setComments(sortedPosts)
-          localStorage.setItem("token", data.token);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+          .then((data) => {
+            const sortedPosts = data.comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setComments(sortedPosts)
+            localStorage.setItem("token", data.token);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
     }
   }, [post._id]);
 
@@ -74,51 +74,47 @@ const Post = ({ post, onLike, user, onDelete, token }) => {
   const buttonClass = isClicked ? 'like-button clicked' : 'like-button'
 
   return (
-    <div className="post-container" key={post._id}>
-      <div className="post">
-        <div className="post-user-delete">
-          <div className="post-user">
-            <img className="user-image" src={user.image} alt="image" />
-            <p>{user.username}</p>
+      <div className="post-container" key={post._id}>
+        <div className="post">
+          <div className="post-user-delete">
+            <div className="post-user">
+              <img className="user-image" src={user.image} alt="image" />
+              <p>{user.username}</p>
+            </div>
+            <img className="delete-button" src={image} alt="delete" onClick={handleDeleteClick} />
           </div>
-          <img className="delete-button" src={image} alt="delete" onClick={handleDeleteClick} />
-        </div>
-        <div className="post-content">
-          <div className="post-message"><p>{post.message}</p></div>
-          <div className="likes">
-            <img className={buttonClass} src={like} onClick={handleLikeClick}/>
-            <p>Likes: {post.likes}</p>
+          <div className="post-content">
+            <div className="post-message"><p>{post.message}</p></div>
+            <div className="likes">
+              <img className={buttonClass} src={like} onClick={handleLikeClick}/>
+              <p>Likes: {post.likes}</p>
+            </div>
           </div>
         </div>
-      </div>
-      <p className="border"></p>
-      
-      <div className="comments">
-        <form onSubmit={handleSubmitComment}>
+        <p className="border"></p>
+
+        <div className="comments">
+          <form onSubmit={handleSubmitComment}>
             <div className="create-comment">
-              <div className="width">
               <input
-                className="comment-input"
-                type="text"
-                onChange={handleCommentChange}
-                placeholder="Add a comment..."
+                  className="comment-input"
+                  type="text"
+                  onChange={handleCommentChange}
+                  placeholder="Add a comment..."
               />
-              </div>
-              <div className="submit-width">
-                <input type="submit" className="submit" value={"send"}/>
-              </div>
+              <button className="comment-submit" type="submit">Submit</button>
             </div>
           </form>
 
           {comments
-            .map((comment) => (
-              <div className="feed-comment" key={comment._id}>
-                <Comment comment={comment} onDelete={handleDeleteComment} />
-              </div>
-            ))}
+              .map((comment) => (
+                  <div className="feed-comment" key={comment._id}>
+                    <Comment comment={comment} onDelete={handleDeleteComment} />
+                  </div>
+              ))}
+        </div>
+
       </div>
-        
-    </div>
   );
 };
 
