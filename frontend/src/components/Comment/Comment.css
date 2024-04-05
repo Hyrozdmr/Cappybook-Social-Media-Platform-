@@ -16,42 +16,40 @@
 }
 
 .comment-info {
-  width: 100px;
-}
-
-.create-comment {
   display: flex;
-  flex-direction: column;
-  /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);*/
-  width: 250px;
   justify-content: center;
+  background-color: rgb(243, 247, 250);
+  padding: 10px;
+  border-radius: 5px;
 }
 
-.create-comment button {
-  background-color: rgba(76, 175, 80, 0.45); /* Green background */
-  color: white; /* White text */
-  padding: 10px 20px; /* Padding */
-  border: none; /* Remove border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Cursor style */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow */
-  transition: background-color 0.3s ease; /* Smooth transition */
-  margin-top: 10px;
+.delete-comment {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.create-comment button:hover {
-  background-color: #45a049; /* Darker green on hover */
+.delete-comment-button {
+  top: 0;
 }
 
-.create-comment input[type="text"] {
-  padding: 10px 20px; /* Padding */
-  border: none; /* Remove border */
-  border-radius: 5px; /* Rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow */
-  transition: box-shadow 0.3s ease; /* Smooth transition */
+.delete-button {
+  width: 10px;
+  height: 10px;
+  opacity: 0.6;
 }
 
-.create-comment input[type="text"]:focus {
-  outline: none; /* Remove default focus outline */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow on focus */
+.comment-user {
+  display: flex;
+  align-items: center;
+}
+
+.comment-user p{
+  font-size: 13px;
+}
+
+.comment-user-image {
+  height:40px;
+  width: 40px;
+  border-radius: 5px;
 }
