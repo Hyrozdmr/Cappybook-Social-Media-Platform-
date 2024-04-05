@@ -8,7 +8,7 @@ import "./FeedPage.css"
 export const FeedPage = () => {
     const [posts, setPosts] = useState([]);
     const [post, setPost] = useState("");
-
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -44,15 +44,16 @@ export const FeedPage = () => {
     }
 
     const handleDelete = async (postId) => {
-      try {
-          await deletePosts(token, postId);
-          const updatedPosts = await getPosts(token);
-          const sortedPosts = updatedPosts.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          setPosts(sortedPosts);
-      } catch (err) {
-          console.error(err);
-      }
-  };
+        try {
+            await deletePosts(token, postId);
+            const updatedPosts = await getPosts(token);
+            const sortedPosts = updatedPosts.posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setPosts(sortedPosts);
+        } catch (err) {
+            console.error(err);
+            setErrorMessage("  🤡 nice try bozo! try deleting your own post instead... 😉");
+        }
+    };
   
 
     const handleSubmitPost = async (event) => {
@@ -89,6 +90,7 @@ export const FeedPage = () => {
             </div>
           ))}
         </div>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     );
   };
