@@ -1,41 +1,26 @@
-import { useState } from "react";
 
-const Comment = (props) => {
-  const [comment, setComment] = useState("");
-  const [comments, setComments] = useState(props.post.comments || []);
 
-  const handleCommentChange = (event) => {
-    setComment(event.target.value);
-  };
+// import image from "/src/static/img/x-button.png";
+import userImage from "/src/static/img/user_image.png";
 
-  const handleSubmitComment = (event) => {
-    event.preventDefault();
-    // You can handle submitting the comment here
-    console.log("Submitting comment:", comment);
-    const newComment = { text: comment, id: Math.random().toString() }; // You can replace id generation with a better approach
-    setComments([...comments, newComment]); // Add the new comment to the list of comments
-    setComment(""); // Clear the comment input field after submission
-  };
+const Comment= ({comment, onDelete}) => {
 
-  return (
-    <div>
-      <h4>Comments:</h4>
-      <ul>
-        {comments.map((comment) => (
-          <li key={comment.id}>{comment.text}</li>
-        ))}
-      </ul>
-      <form onSubmit={handleSubmitComment}>
-        <input
-          type="text"
-          value={comment}
-          onChange={handleCommentChange}
-          placeholder="Add a comment..."
-        />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  );
+    const handleDeleteCommentClick = () => {
+        onDelete(comment._id);
+    };
+
+    return (
+        <div>
+                <div className="comment-info">
+                    <div className="comment-user">
+                        <img className="user-image" src={userImage} alt="image" />
+                        {/* <p>{post.User.username}</p> */}
+                    </div>
+                    <p>{comment.message}</p>
+                    <button onClick={handleDeleteCommentClick}>Delete</button>
+                </div>
+        </div>
+    );
 };
 
 export default Comment;
