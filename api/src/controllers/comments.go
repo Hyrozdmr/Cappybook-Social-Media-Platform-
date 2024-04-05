@@ -16,9 +16,7 @@ type JSONComment struct {
 	Message string `json:"message"`
 	Likes   int    `json:"likes"`
 	PostId  int    `json:"post_id"`
-	// UserID  string `json:"user_id"`
-	// Username string `json:"username"`
-	User JSONUser
+	User    JSONUser
 }
 
 type createCommentRequestBody struct {
@@ -98,7 +96,7 @@ func CreateComment(ctx *gin.Context) {
 			User: JSONUser{
 				UserID:   user.ID,
 				Username: user.Username,
-				// Image: user.FileData,
+				PhotoURL: user.PhotoURL,
 			},
 		})
 	}
@@ -145,7 +143,7 @@ func GetAllCommentsByPostId(ctx *gin.Context) {
 			User: JSONUser{
 				UserID:   user.ID,
 				Username: user.Username,
-				// Image: user.FileData,
+				PhotoURL: user.PhotoURL,
 			},
 		})
 	}
@@ -191,7 +189,7 @@ func GetSpecificComment(ctx *gin.Context) {
 		User: JSONUser{
 			UserID:   user.ID,
 			Username: user.Username,
-			// Image: user.FileData,
+			PhotoURL: user.PhotoURL,
 		},
 	}
 
