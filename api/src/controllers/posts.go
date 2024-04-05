@@ -22,7 +22,7 @@ type JSONPost struct {
 type JSONUser struct {
 	UserID   uint   `json:"user_id"`
 	Username string `json:"username"`
-	Image    []byte `json:"image"`
+	PhotoURL string `json:"image"`
 }
 
 func GetAllPosts(ctx *gin.Context) {
@@ -69,7 +69,7 @@ func GetAllPosts(ctx *gin.Context) {
 				User: JSONUser{
 					UserID:   user.ID,
 					Username: user.Username,
-					// Image:    user.FileData,
+					PhotoURL: user.PhotoURL,
 				},
 			})
 		}
