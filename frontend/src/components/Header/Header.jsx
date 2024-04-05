@@ -33,7 +33,7 @@ export default function Header() {
   <div className="header">
     <div className="logo">
       <img src={capybara} alt="logo" />
-      <Link to="/">Acebook</Link>
+      <Link to="/">Cappybook</Link>
     </div>
     {navbar}
   </div>)
