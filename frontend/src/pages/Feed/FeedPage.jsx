@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPosts, createPosts, updatePostLikes, deletePosts} from "../../services/posts";
 import Post from "../../components/Post/Post";
-import "./FeedPage.scss"
+import "./FeedPage.css"
 
 
 export const FeedPage = () => {
@@ -85,7 +85,7 @@ export const FeedPage = () => {
         <div className="feed-all-posts" role="feed">
           {posts.map((post) => (
             <div className="feed-post" key={post._id}>
-              <Post post={post} token={token} onDelete={handleDelete} onLike={handleLike} user={post.User.username} />
+              <Post post={post} token={token} onDelete={handleDelete} onLike={handleLike} user={post.User} />
             </div>
           ))}
         </div>
