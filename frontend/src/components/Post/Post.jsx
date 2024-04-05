@@ -2,7 +2,6 @@
 // import {getComments} from "../../services/comments.js";
 import "./Post.css"
 import image from "/src/static/img/x-button.png";
-import userImage from "/src/static/img/user_image.png";
 
 const Post = ({ post, onLike, user, onDelete }) => {
     const handleLikeClick = () => {
