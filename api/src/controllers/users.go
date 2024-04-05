@@ -95,12 +95,12 @@ func CreateUser(ctx *gin.Context) {
 	}
 
 	if newUser.Email == "" || newUser.Password == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Must supply username and password"}) // Returns error if email and password are blank
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "You must supply username and password"}) // Returns error if email and password are blank
 		return
 	}
 
 	if len(newUser.Password) < 8 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Password must be at least 8 characters"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Your password must be at least 8 characters"})
 		return
 	}
 
@@ -118,7 +118,7 @@ func CreateUser(ctx *gin.Context) {
 	}
 
 	if containsSpecialCharacter != true {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Password must have at least one special character"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Your password must have at least one special character"})
 		return
 	}
 
@@ -149,7 +149,7 @@ func CreateUser(ctx *gin.Context) {
 	}
 
 	if existingUser != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Email already exists"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "An account already exists with this email, try to login instead"})
 		return
 	}
 
