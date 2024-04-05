@@ -6,15 +6,14 @@ import Comment from "../../components/Comment/Comment";
 import { getComments, createComments } from "../../services/comments";
 import "./FeedPage.css";
 
+
 export const FeedPage = () => {
     const [posts, setPosts] = useState([]);
     const [post, setPost] = useState("");
     const [comments, setComments] = useState([]);
     const [errorMessage, setErrorMessage] = useState(''); // Lifted up the state
     const navigate = useNavigate();
-
     const token = localStorage.getItem("token");
-
     useEffect(() => {
         if (token) {
             getPosts(token)
@@ -27,7 +26,6 @@ export const FeedPage = () => {
                     console.error(err);
                     navigate("/login");
                 });
-
             getComments(token)
                 .then((data) => {
                     const sortedComments = data.comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -39,7 +37,6 @@ export const FeedPage = () => {
                 });
         }
     }, [navigate, token]);
-
     const handleLike = async (postId) => {
         try {
             await updatePostLikes(token, postId);
@@ -94,7 +91,6 @@ export const FeedPage = () => {
             console.error(err);
         }
     };
-
     const handlePostChange = (event) => {
         setPost(event.target.value);
     };
@@ -127,3 +123,4 @@ export const FeedPage = () => {
         </div>
     );
 };
+

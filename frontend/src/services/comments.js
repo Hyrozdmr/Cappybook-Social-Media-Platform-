@@ -19,9 +19,9 @@ export const getComments = async (postId, token) => {
   return data;
 };
 
-export const createComments = async (postId, token, comment) => {
+export const createComments = async (token, comment, postId) => {
   const commentData = {
-    "text": comment
+    "message": comment
   };
   
   const requestOptions = {
@@ -37,6 +37,24 @@ export const createComments = async (postId, token, comment) => {
 
   if (response.status !== 201) {
     throw new Error("Unable to create comment");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+
+export const deleteComments = async (token, postId, commentId) => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/posts/${postId}/comments/${commentId}/delete`, requestOptions);
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch posts");
   }
 
   const data = await response.json();
